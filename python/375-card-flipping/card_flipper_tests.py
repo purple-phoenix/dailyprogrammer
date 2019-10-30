@@ -86,3 +86,32 @@ class TestCardFlipper(unittest.TestCase):
                 (3,[True, False, True, None, None, False, True]),
                 (6,[True, False, False, True, None, True, None])],
                           find_all_moves([True, False, False, True, None, False, True]))
+
+    def test_find_winning_moves(self):
+        self.assertEquals([1, 0, 2, 3, 5, 4, 6],
+                          find_winning_moves([False, True, False, False, True, True, False])
+                          )
+
+        self.assertEquals(None,
+                          find_winning_moves([False, True, False, False, True, True, False, False, True, True, True])
+                          )
+
+        self.assertEquals([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                          find_winning_moves([True,
+                                              False,
+                                              False,
+                                              False,
+                                              False,
+                                              True,
+                                              True,
+                                              False,
+                                              False,
+                                              True,
+                                              False,
+                                              True,
+                                              False,
+                                              False,
+                                              False
+                                              ])
+                          )
+

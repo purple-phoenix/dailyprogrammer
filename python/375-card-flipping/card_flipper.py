@@ -80,4 +80,5 @@ def find_all_moves_helper(game: Game, move_counter: int):
         return find_all_moves_helper(game, move_counter + 1)
 
 
-
+def find_winning_moves(game: Game) -> Optional[List[Move]]:
+    pass
