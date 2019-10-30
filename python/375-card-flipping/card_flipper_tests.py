@@ -138,3 +138,5 @@ class TestCardFlipper(unittest.TestCase):
         self.assertFalse(is_unwinnable_game([False, True, False, False, True, True, False]))
 
         self.assertTrue(is_unwinnable_game([False, True, False, False, True, True, False, False, True, True, True]))
+
+        self.assertFalse(is_unwinnable_game([None, None, True, False, True, True, False]))
