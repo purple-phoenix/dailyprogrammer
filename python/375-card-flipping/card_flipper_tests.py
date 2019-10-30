@@ -183,3 +183,17 @@ class TestCardFlipper(unittest.TestCase):
         self.assertEquals(1, num_none([None]))
         self.assertEquals(0, num_none([False]))
         self.assertEquals(1, num_none([True, False, None, False, True, True]))
+
+    def test_repr_game(self):
+        self.assertEquals("", repr_game([]))
+        self.assertEquals("01001101", repr_game([False, True, False, False, True, True, False, True]))
+        self.assertEquals("0*00*11*", repr_game([False, None, False, False, None, True, True, None]))
+
+    def test_repr_moves(self):
+        self.assertEquals("", repr_moves([]))
+        self.assertEquals("1 2 5 8", repr_moves([1, 2, 5, 8]))
+
+    def test_repr_card(self):
+        self.assertEquals("0", repr_card(False))
+        self.assertEquals("1", repr_card(True))
+        self.assertEquals("*", repr_card(None))

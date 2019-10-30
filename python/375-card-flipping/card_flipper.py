@@ -81,10 +81,16 @@ def find_all_moves_helper(game: Game, move_counter: int):
 
 
 def find_winning_moves(game: Game) -> Optional[List[Move]]:
+    print("Initial Game State")
+    print(repr_game(game))
     return find_winning_moves_helper(game, [])
 
 
 def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
+    print("Moves so far")
+    print(repr_moves(moves_so_far))
+    print("Updated Game State")
+    print(repr_game(game))
     if game_is_won(game):
         return moves_so_far
 
@@ -174,3 +180,28 @@ def count_game_condition(game: Game, condition: Callable[[Card], bool]) -> int:
             return 1 + count_game_condition(game[1:], condition)
         else:
             return count_game_condition(game[1:], condition)
+
+def repr_game(game: Game):
+    if not game:
+        return ""
+    card = game[0]
+    return repr_card(card) + repr_game(game[1:])
+
+def repr_card(card: Card):
+    if card is None:
+        return "*"
+    elif is_face_up(card):
+        return "1"
+    else:
+        return "0"
+
+def repr_moves(moves: List[Move]):
+    if not moves:
+        return ""
+    move = moves[0]
+    rest_of_moves = moves[1:]
+    if not rest_of_moves:
+        return str(move)
+    else:
+        return str(move) + " " + repr_moves(rest_of_moves)
+
