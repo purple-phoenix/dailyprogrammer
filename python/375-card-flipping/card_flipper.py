@@ -88,6 +88,9 @@ def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
     if game_is_won(game):
         return moves_so_far
 
+    elif is_unwinnable_game(game):
+        return None
+
     all_moves_with_games = find_all_moves(game)
     # No valid moves for this game state
     # Cannot win
