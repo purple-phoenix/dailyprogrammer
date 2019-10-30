@@ -83,8 +83,18 @@ def find_all_moves_helper(game: Game, move_counter: int):
 def find_winning_moves(game: Game) -> Optional[List[Move]]:
     find_winning_moves_helper(game, [])
 
+
 def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
     pass
 
+
 def game_is_won(game: Game):
-    pass
+    if not game:
+        return True
+
+    first_card = game[0]
+    if first_card is not None:
+        return False
+
+    rest_of_game = game[1:]
+    return game_is_won(rest_of_game)
