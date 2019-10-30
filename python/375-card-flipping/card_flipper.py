@@ -34,7 +34,7 @@ def zip_game_with_index(index, game):
 
 
 def should_flip_neighbor(flipped_index, neighbor_index) -> bool:
-    pass
+    return neighbor_index == flipped_index + 1 or neighbor_index == flipped_index - 1
 
 def flip_neighbor(flipped_index, neighbor_index, neighbor_value) -> Optional[Card]:
     pass

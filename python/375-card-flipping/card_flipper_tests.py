@@ -70,3 +70,12 @@ class TestCardFlipper(unittest.TestCase):
             zip_game_with_index(index, game)
         )
 
+    def test_should_flip_neighbor(self):
+        self.assertTrue(should_flip_neighbor(0, 1))
+        self.assertTrue(should_flip_neighbor(1, 2))
+        self.assertTrue(should_flip_neighbor(2, 1))
+        self.assertFalse(should_flip_neighbor(0, 0))
+        self.assertFalse(should_flip_neighbor(0, 2))
+
+
+
