@@ -37,7 +37,12 @@ def should_flip_neighbor(flipped_index, neighbor_index) -> bool:
     return neighbor_index == flipped_index + 1 or neighbor_index == flipped_index - 1
 
 def flip_neighbor(flipped_index, neighbor_index, neighbor_value) -> Optional[Card]:
-    pass
+    if neighbor_value is None:
+        return None
+    elif not should_flip_neighbor(flipped_index, neighbor_index):
+        return None
+
+    return not neighbor_value
 
 
 def flip_card(game: Game, index: int) -> Optional[Game]:
