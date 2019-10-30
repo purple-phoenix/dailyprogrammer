@@ -1,4 +1,4 @@
-from typing import Dict, List, Union, Optional, Tuple
+from typing import Dict, List, Union, Optional, Tuple, Callable
 
 Card = bool
 
@@ -131,6 +131,10 @@ def is_unwinnable_game_helper(game: Game, seen_cards: Game):
     # An empty game is considered won
     if not game:
         return False
+    # Game is winnable as long as there is an odd number of face up cards
+    # on both sides of every None
+    elif num_none(game) == 0:
+        return num_face_up(game) % 2 == 0
     elif len(game) == 1:
         # If a game is a single card then it is only
         # winnable if face up. So it is unwinnable if face down i.e not face up
@@ -155,3 +159,18 @@ def is_unwinnable_game_helper(game: Game, seen_cards: Game):
             return is_unwinnable_game_helper(game[1:], seen_cards + [first_card])
 
 
+def num_face_up(game: Game):
+    return count_game_condition(game, lambda card: is_face_up(card))
+
+def num_none(game: Game):
+    return count_game_condition(game, lambda card: card is None)
+
+def count_game_condition(game: Game, condition: Callable[[Card], bool]) -> int:
+    if not game:
+        return 0
+    else:
+        card = game[0]
+        if condition(card):
+            return 1 + count_game_condition(game[1:], condition)
+        else:
+            return count_game_condition(game[1:], condition)

@@ -134,9 +134,52 @@ class TestCardFlipper(unittest.TestCase):
         self.assertTrue(is_unwinnable_game([False, False]))
         self.assertTrue(is_unwinnable_game([True, True]))
 
+
         self.assertTrue(is_unwinnable_game([False, True, True, None, False, False]))
         self.assertFalse(is_unwinnable_game([False, True, False, False, True, True, False]))
 
+        # 6 True, 5 False
         self.assertTrue(is_unwinnable_game([False, True, False, False, True, True, False, False, True, True, True]))
 
+        # 3 True, 2 False
         self.assertFalse(is_unwinnable_game([None, None, True, False, True, True, False]))
+
+        # 1 True, 2 False
+        self.assertFalse(is_unwinnable_game([True, False, False]))
+
+        # 5 True, 10 False
+        self.assertFalse(is_unwinnable_game([True,
+                                              False,
+                                              False,
+                                              False,
+                                              False,
+                                              True,
+                                              True,
+                                              False,
+                                              False,
+                                              True,
+                                              False,
+                                              True,
+                                              False,
+                                              False,
+                                              False
+                                              ]))
+
+        self.assertFalse(is_unwinnable_game([True, None, True, False, True, True, False]))
+    def test_num_face_up(self):
+        self.assertEquals(1, num_face_up([True]))
+        self.assertEquals(1, num_face_up([True, False]))
+        self.assertEquals(1, num_face_up([None, True, False, None]))
+        self.assertEquals(0, num_face_up([]))
+        self.assertEquals(0, num_face_up([None]))
+        self.assertEquals(0, num_face_up([False]))
+        self.assertEquals(3, num_face_up([True, False, None, False, True, True]))
+
+    def test_num_none(self):
+        self.assertEquals(0, num_none([True]))
+        self.assertEquals(0, num_none([True, False]))
+        self.assertEquals(2, num_none([None, True, False, None]))
+        self.assertEquals(0, num_none([]))
+        self.assertEquals(1, num_none([None]))
+        self.assertEquals(0, num_none([False]))
+        self.assertEquals(1, num_none([True, False, None, False, True, True]))
