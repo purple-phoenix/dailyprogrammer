@@ -121,6 +121,10 @@ def game_is_won(game: Game):
     return game_is_won(rest_of_game)
 
 def is_unwinnable_game(game: Game):
+    return is_unwinnable_game_helper(game, [])
+
+
+def is_unwinnable_game_helper(game: Game, seen_cards: Game):
     # An empty game is considered won
     if not game:
         return False
@@ -136,12 +140,15 @@ def is_unwinnable_game(game: Game):
         second_card = game[1]
         return first_card == second_card
     else:
-        # If a game is more than two cards, then just whether the first card
-        # is isolated. The game is unwinnable if there is an isolation or if
-        # the rest of the game is unwinnable
+        # In the general case we attempt to divide and conquer
+        # when a card is None, the cards to the left and right can be
+        # thought of as separate games. This game is winnable if and only if
+        # the cards to left and the right are winnable in isolation since they are divided by
+        # a card which has already been taken
         first_card = game[0]
-        second_card = game[1]
-        if not is_face_up(first_card) and second_card is None:
-            return True
+        if first_card is None:
+            return is_unwinnable_game(seen_cards) or is_unwinnable_game(game[1:])
         else:
-            return is_unwinnable_game(game[1:])
+            return is_unwinnable_game_helper(game[1:], seen_cards + [first_card])
+
+
