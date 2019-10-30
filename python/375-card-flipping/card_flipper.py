@@ -23,8 +23,7 @@ def make_move(game: Game, index: int) -> Optional[Game]:
 def flip_neighbors(game: Optional[Game], index: int) -> Optional[Game]:
     if game is None:
         return None
-    return list(map(flip_neighbor(),
-                    list(map(lambda card: index, zip_game_with_index(index, game)))))
+    return list(map(flip_neighbor(), zip_game_with_index(index, game)))
 
 
 def zip_game_with_index(index, game):
