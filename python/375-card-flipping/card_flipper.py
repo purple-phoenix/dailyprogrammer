@@ -47,6 +47,19 @@ def flip_card(game: Game, index: int) -> Optional[Game]:
     elif index > len(game) - 1:
         print("Invalid Index! Must be less than the size of the game - 1")
         return None
+    return flip_card_helper(game, index, 0)
+
+def flip_card_helper(game: Game, index: int, new_index: int):
+    if not game:
+        return []
+    else:
+        card = game[0]
+        if index == new_index and can_flip(card):
+            return [None] + flip_card_helper(game[1:], index, new_index + 1)
+        else:
+            return [card] + flip_card_helper(game[1:], index, new_index + 1)
+
+
 
 
 
