@@ -66,8 +66,18 @@ def flip_card_helper(game: Game, index: int, new_index: int):
 
 
 def find_all_moves(game: Game) -> List[Tuple[Move, Game]]:
-    pass
+    return find_all_moves_helper(game, 0)
 
+def find_all_moves_helper(game: Game, move_counter: int):
+    if move_counter == len(game):
+        return []
+
+    maybe_this_move = make_move(game, move_counter)
+    if maybe_this_move is not None:
+        valid_move = maybe_this_move
+        return [(move_counter, valid_move)] + find_all_moves_helper(game, move_counter + 1)
+    else:
+        return find_all_moves_helper(game, move_counter + 1)
 
 
 
