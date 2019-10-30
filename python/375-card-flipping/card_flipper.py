@@ -23,14 +23,9 @@ def make_move(game: Game, index: int) -> Optional[Game]:
 def flip_neighbors(game: Optional[Game], index: int) -> Optional[Game]:
     if game is None:
         return None
-    return list(map(flip_neighbor(), zip_game_with_index(index, game)))
-
-
-def zip_game_with_index(index, game):
-    incremental_indexes = list(range(0, len(game)))
-    list_of_index = [index] * len(game)
-    return list(zip(list_of_index, incremental_indexes, game))
-
+    neighbor_indexes = list(range(0, len(game)))
+    flipped_indexes = [index] * len(game)
+    return list(map(flip_neighbor, flipped_indexes, neighbor_indexes, game))
 
 
 def should_flip_neighbor(flipped_index, neighbor_index) -> bool:
@@ -52,6 +47,7 @@ def flip_card(game: Game, index: int) -> Optional[Game]:
     elif index > len(game) - 1:
         print("Invalid Index! Must be less than the size of the game - 1")
         return None
+
 
 
 

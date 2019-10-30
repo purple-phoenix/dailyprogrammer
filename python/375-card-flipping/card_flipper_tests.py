@@ -62,13 +62,6 @@ class TestCardFlipper(unittest.TestCase):
                           make_move(self.example_game, 1))
         self.assertEquals(None, make_move([False, True, False], 0))
 
-    def test_zip_game_with_index(self):
-        game = [True, None, False]
-        index = 1
-        self.assertEquals(
-            [(1, 0, True), (1, 1, None), (1, 2, False)],
-            zip_game_with_index(index, game)
-        )
 
     def test_should_flip_neighbor(self):
         self.assertTrue(should_flip_neighbor(0, 1))
