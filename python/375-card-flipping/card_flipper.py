@@ -119,3 +119,29 @@ def game_is_won(game: Game):
 
     rest_of_game = game[1:]
     return game_is_won(rest_of_game)
+
+def is_unwinnable_game(game: Game):
+    # An empty game is considered won
+    if not game:
+        return False
+    elif len(game) == 1:
+        # If a game is a single card then it is only
+        # winnable if face up. So it is unwinnable if face down i.e not face up
+        first_card = game[0]
+        return not is_face_up(first_card)
+    elif len(game) == 2:
+        # If a game is two cards, then it is unwinnable if
+        # they are either both face up or both face down
+        first_card = game[0]
+        second_card = game[1]
+        return first_card == second_card
+    else:
+        # If a game is more than two cards, then just whether the first card
+        # is isolated. The game is unwinnable if there is an isolation or if
+        # the rest of the game is unwinnable
+        first_card = game[0]
+        second_card = game[1]
+        if not is_face_up(first_card) and second_card is None:
+            return True
+        else:
+            return is_unwinnable_game(game[1:])
