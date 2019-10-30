@@ -71,7 +71,7 @@ class TestCardFlipper(unittest.TestCase):
         self.assertFalse(should_flip_neighbor(0, 2))
 
     def test_flip_neighbor(self):
-        self.assertEquals(None, flip_neighbor(0, 2, True))
+        self.assertEquals(True, flip_neighbor(0, 2, True))
         self.assertEquals(None, flip_neighbor(0, 1, None))
         self.assertEquals(True, flip_neighbor(0, 1, False))
         self.assertEquals(False, flip_neighbor(1, 2, True))
