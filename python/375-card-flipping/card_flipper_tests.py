@@ -76,3 +76,13 @@ class TestCardFlipper(unittest.TestCase):
         self.assertEquals(True, flip_neighbor(0, 1, False))
         self.assertEquals(False, flip_neighbor(1, 2, True))
 
+    def test_find_all_moves(self):
+        self.assertEquals([(0, [None, None, None])], find_all_moves([True, None, None]))
+        self.assertEquals([(0, [None, False, True]), (1, [False, None, False]), (2, [True, False, None])],
+                          find_all_moves([True, True, True]))
+        self.assertEquals(
+            [
+                (0,[None, True, False, True, None, False, True]),
+                (3,[True, False, True, None, None, False, True]),
+                (6,[True, False, False, True, None, True, None])],
+                          find_all_moves([True, False, False, True, None, False, True]))

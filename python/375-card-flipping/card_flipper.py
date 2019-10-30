@@ -1,4 +1,4 @@
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Union, Optional, Tuple
 
 Card = bool
 
@@ -24,6 +24,7 @@ def make_move(game: Game, index: int) -> Optional[Game]:
         return flip_neighbors(game_after_flipping, index)
     else:
         return None
+
 def flip_neighbors(game: Optional[Game], index: int) -> Optional[Game]:
     if game is None:
         return None
@@ -64,7 +65,19 @@ def flip_card_helper(game: Game, index: int, new_index: int):
             return [card] + flip_card_helper(game[1:], index, new_index + 1)
 
 
+def find_all_moves(game: Game) -> List[Tuple[Move, Game]]:
+    return find_all_moves_helper(game, 0)
 
+def find_all_moves_helper(game: Game, move_counter: int):
+    if move_counter == len(game):
+        return []
+
+    maybe_this_move = make_move(game, move_counter)
+    if maybe_this_move is not None:
+        valid_move = maybe_this_move
+        return [(move_counter, valid_move)] + find_all_moves_helper(game, move_counter + 1)
+    else:
+        return find_all_moves_helper(game, move_counter + 1)
 
 
 
