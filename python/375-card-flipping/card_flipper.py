@@ -35,7 +35,7 @@ def flip_neighbor(flipped_index, neighbor_index, neighbor_value) -> Optional[Car
     if neighbor_value is None:
         return None
     elif not should_flip_neighbor(flipped_index, neighbor_index):
-        return None
+        return neighbor_value
 
     return not neighbor_value
 
