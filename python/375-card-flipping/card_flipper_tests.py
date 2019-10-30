@@ -115,3 +115,11 @@ class TestCardFlipper(unittest.TestCase):
                                               ])
                           )
 
+    def test_game_is_won(self):
+        self.assertTrue(game_is_won([]))
+        self.assertTrue(game_is_won([None]))
+        self.assertTrue(game_is_won([None, None, None]))
+        self.assertFalse(game_is_won([None, False, True]))
+        self.assertFalse(game_is_won([None, None, None, True, None]))
+        self.assertFalse(game_is_won([None, False, None]))
+
