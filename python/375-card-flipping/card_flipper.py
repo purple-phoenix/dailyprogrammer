@@ -16,10 +16,14 @@ def can_flip(card: Card) -> bool:
 
 
 def make_move(game: Game, index: int) -> Optional[Game]:
-    # Flip card
-    # flip neighbors
-    return None
-
+    #  Flip card, then flip its neighbors if possible
+    #  else return None
+    game_after_flipping = flip_card(game, index)
+    if game_after_flipping != game:
+        # Then this was a valid move
+        return flip_neighbors(game_after_flipping, index)
+    else:
+        return None
 def flip_neighbors(game: Optional[Game], index: int) -> Optional[Game]:
     if game is None:
         return None
