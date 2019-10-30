@@ -53,8 +53,8 @@ class TestCardFlipper(unittest.TestCase):
         self.assertEquals(self.example_game_flipped_at_one_flipped_neighbors,
                           flip_neighbors(self.example_game_flipped_at_one, 1)
                           )
-        self.assertEquals([None, True, None], flip_neighbors([None, False, None], 1))
-        self.assertEquals([None, False, True], flip_neighbors([None, False, False]))
+        self.assertEquals([None, True, None], flip_neighbors([None, True, None], 1))
+        self.assertEquals([None, False, True], flip_neighbors([None, False, False], 1))
         self.assertEquals(None, flip_neighbors(None, 0))
 
     def test_make_move(self):
