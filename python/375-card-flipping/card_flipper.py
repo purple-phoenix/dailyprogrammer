@@ -81,11 +81,32 @@ def find_all_moves_helper(game: Game, move_counter: int):
 
 
 def find_winning_moves(game: Game) -> Optional[List[Move]]:
-    find_winning_moves_helper(game, [])
+    return find_winning_moves_helper(game, [])
 
 
 def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
-    pass
+    if game_is_won(game):
+        return moves_so_far
+
+    all_moves_with_games = find_all_moves(game)
+    # No valid moves for this game state
+    # Cannot win
+    if not all_moves_with_games:
+        return None
+    valid_moves, new_games = list(zip(*all_moves_with_games))
+
+    all_winning_moves_sets = list(map(
+        lambda valid_move, new_game_state:
+            find_winning_moves_helper(new_game_state, moves_so_far + [valid_move]),
+        valid_moves, new_games
+    ))
+
+    # Based on the rules of the game there can only ever be one winning move set
+    # There will be either exactly one move set in this list it will be empty
+    if not all_winning_moves_sets:
+        return None
+    else:
+        return all_winning_moves_sets[0]
 
 
 def game_is_won(game: Game):
