@@ -1,5 +1,6 @@
 from typing import Dict, List, Union, Optional, Tuple, Callable
 
+
 Card = bool
 
 Move = int
@@ -92,9 +93,11 @@ def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
     print("Updated Game State")
     print(repr_game(game))
     if game_is_won(game):
+        print("Won Game!\n\n\n")
         return moves_so_far
 
     elif is_unwinnable_game(game):
+        print("Game unwinnable!")
         return None
 
     all_moves_with_games = find_all_moves(game)
@@ -104,19 +107,14 @@ def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
         return None
     valid_moves, new_games = list(zip(*all_moves_with_games))
 
-    all_winning_moves_sets = list(map(
-        lambda valid_move, new_game_state:
-            find_winning_moves_helper(new_game_state, moves_so_far + [valid_move]),
-        valid_moves, new_games
-    ))
-
-    # Based on the rules of the game there can only ever be one winning move set
-    # There will be either exactly one move set in this list it will be empty
-    if not all_winning_moves_sets:
-        return None
-    else:
-        return all_winning_moves_sets[0]
-
+    # Python equivalent of a lazy first in this map
+    for x in filter (lambda result: result is not None,
+            (map(
+                lambda valid_move, new_game_state:
+                    find_winning_moves_helper(new_game_state, moves_so_far + [valid_move]),
+            valid_moves, new_games
+    ))):
+        return x
 
 def game_is_won(game: Game):
     if not game:

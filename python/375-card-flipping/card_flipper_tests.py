@@ -96,7 +96,7 @@ class TestCardFlipper(unittest.TestCase):
                           find_winning_moves([False, True, False, False, True, True, False, False, True, True, True])
                           )
 
-        self.assertEquals([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        self.assertEquals([0, 1, 2, 3, 4, 6, 5, 7, 8, 11, 10, 9, 12, 13, 14],
                           find_winning_moves([True,
                                               False,
                                               False,
@@ -114,6 +114,8 @@ class TestCardFlipper(unittest.TestCase):
                                               False
                                               ])
                           )
+
+
 
     def test_game_is_won(self):
         self.assertTrue(game_is_won([]))
