@@ -3,19 +3,19 @@ from typing import List
 Responses = List[int]
 
 
-def warmup1(responses: Responses) -> Responses:
+def remove_all_zeros(responses: Responses) -> Responses:
     return list(filter(lambda response: response != 0, responses))
 
-def warmup2(responses: Responses) -> Responses:
+def sort_desc(responses: Responses) -> Responses:
     return sorted(responses, reverse=True)
 
-def warmup3(n: int, responses: Responses) -> bool:
+def is_responses_smaller_than(n: int, responses: Responses) -> bool:
     return n > len(responses)
 
-def warmup4(first_n: int, sorted_responses: Responses) -> Responses:
-    return warmup4_helper(first_n, sorted_responses, [], 0)
+def reduce_first_n_by_one(first_n: int, sorted_responses: Responses) -> Responses:
+    return _reduce_first_n_by_one_helper(first_n, sorted_responses, [], 0)
 
-def warmup4_helper(first_n: int,
+def _reduce_first_n_by_one_helper(first_n: int,
                    sorted_responses: Responses,
                    processed_responses,
                    accum: int) -> Responses:
@@ -25,7 +25,7 @@ def warmup4_helper(first_n: int,
     else:
         processed_response = sorted_responses[0] - 1
         rest_of_responses = sorted_responses[1:]
-        return warmup4_helper(first_n,
+        return _reduce_first_n_by_one_helper(first_n,
                               rest_of_responses,
                               processed_responses + [processed_response],
                               accum + 1
