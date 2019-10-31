@@ -8,3 +8,6 @@ def warmup1(responses: Responses) -> Responses:
 
 def warmup2(responses: Responses) -> Responses:
     return sorted(responses, reverse=True)
+
+def warmup3(n: int, responses: Responses) -> bool:
+    return n > len(responses)
