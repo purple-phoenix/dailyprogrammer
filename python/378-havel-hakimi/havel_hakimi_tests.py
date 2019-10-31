@@ -51,6 +51,6 @@ class TestHavelHakimi(unittest.TestCase):
             [6, 0, 10, 10, 10, 5, 8, 3, 0, 14, 16, 2, 13, 1, 2, 13, 6, 15, 5, 1]))
         self.assertFalse(havel_hakimi([2,2,0]))
         self.assertFalse(havel_hakimi([3,2,1]))
-        self.assertTrue(havel_hakimi(1,1))
-        self.assertFalse([1])
+        self.assertTrue(havel_hakimi([1,1]))
+        self.assertFalse(havel_hakimi([1]))
         self.assertTrue(havel_hakimi([]))
