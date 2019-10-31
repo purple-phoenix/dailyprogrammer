@@ -9,7 +9,7 @@ def remove_all_zeros(responses: Responses) -> Responses:
 def sort_desc(responses: Responses) -> Responses:
     return sorted(responses, reverse=True)
 
-def is_responses_smaller_than(n: int, responses: Responses) -> bool:
+def is_responses_shorter_than(n: int, responses: Responses) -> bool:
     return n > len(responses)
 
 def reduce_first_n_by_one(first_n: int, sorted_responses: Responses) -> Responses:

@@ -24,12 +24,12 @@ class TestHavelHakimi(unittest.TestCase):
         self.assertEquals([], sort_desc([]))
 
     def test_warmup3(self):
-        self.assertEquals(False, is_responses_smaller_than(7, [6, 5, 5, 3, 2, 2, 2]))
-        self.assertEquals(False, is_responses_smaller_than(5, [5, 5, 5, 5, 5]))
-        self.assertEquals(True, is_responses_smaller_than(5, [5, 5, 5, 5]))
-        self.assertEquals(True, is_responses_smaller_than(3, [1, 1]))
-        self.assertEquals(True, is_responses_smaller_than(1, []))
-        self.assertEquals(False, is_responses_smaller_than(0, []))
+        self.assertEquals(False, is_responses_shorter_than(7, [6, 5, 5, 3, 2, 2, 2]))
+        self.assertEquals(False, is_responses_shorter_than(5, [5, 5, 5, 5, 5]))
+        self.assertEquals(True, is_responses_shorter_than(5, [5, 5, 5, 5]))
+        self.assertEquals(True, is_responses_shorter_than(3, [1, 1]))
+        self.assertEquals(True, is_responses_shorter_than(1, []))
+        self.assertEquals(False, is_responses_shorter_than(0, []))
 
     def test_warmup4(self):
         self.assertEquals([4,3,2,1,1], reduce_first_n_by_one(4, [5, 4, 3, 2, 1]))
