@@ -30,3 +30,6 @@ def warmup4_helper(first_n: int,
                               processed_responses + [processed_response],
                               accum + 1
                               )
+
+def havel_hakimi(responses: Responses) -> bool:
+    pass
