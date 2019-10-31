@@ -22,6 +22,8 @@ def _reduce_first_n_by_one_helper(first_n: int,
 
     if first_n == accum:
         return processed_responses + sorted_responses
+    elif not sorted_responses:
+        return processed_responses
     else:
         processed_response = sorted_responses[0] - 1
         rest_of_responses = sorted_responses[1:]
