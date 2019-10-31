@@ -16,3 +16,9 @@ class TestHavelHakimi(unittest.TestCase):
         self.assertEquals([],
                           warmup1([0,0,0]))
         self.assertEquals([], warmup1([]))
+
+    def test_warmup2(self):
+        self.assertEquals([5,4,3,2,1], warmup2([5,1,3,4,2]))
+        self.assertEquals([4,0,0,0,0], warmup2([0,0,0,4,0]))
+        self.assertEquals([1], warmup2([1]))
+        self.assertEquals([], warmup2([]))
