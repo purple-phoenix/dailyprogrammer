@@ -34,4 +34,16 @@ def _reduce_first_n_by_one_helper(first_n: int,
                               )
 
 def havel_hakimi(responses: Responses) -> bool:
-    pass
+    zeroes_removed = remove_all_zeros(responses)
+    sorted_responses = sort_desc(zeroes_removed)
+    if not sorted_responses:
+        return True
+    else:
+        largest_response = sorted_responses[0]
+        remaining_responses = sorted_responses[1:]
+        if is_responses_shorter_than(largest_response, remaining_responses):
+            return False
+        else:
+            reduced_reponses = reduce_first_n_by_one(largest_response, remaining_responses)
+            return havel_hakimi(reduced_reponses)
+
