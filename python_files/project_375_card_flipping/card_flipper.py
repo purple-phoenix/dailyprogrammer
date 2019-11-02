@@ -1,6 +1,5 @@
 from typing import Dict, List, Union, Optional, Tuple, Callable
 
-
 Card = bool
 
 Move = int
@@ -26,6 +25,7 @@ def make_move(game: Game, index: int) -> Optional[Game]:
     else:
         return None
 
+
 def flip_neighbors(game: Optional[Game], index: int) -> Optional[Game]:
     if game is None:
         return None
@@ -36,6 +36,7 @@ def flip_neighbors(game: Optional[Game], index: int) -> Optional[Game]:
 
 def should_flip_neighbor(flipped_index, neighbor_index) -> bool:
     return neighbor_index == flipped_index + 1 or neighbor_index == flipped_index - 1
+
 
 def flip_neighbor(flipped_index, neighbor_index, neighbor_value) -> Optional[Card]:
     if neighbor_value is None:
@@ -55,6 +56,7 @@ def flip_card(game: Game, index: int) -> Optional[Game]:
         return None
     return flip_card_helper(game, index, 0)
 
+
 def flip_card_helper(game: Game, index: int, new_index: int):
     if not game:
         return []
@@ -68,6 +70,7 @@ def flip_card_helper(game: Game, index: int, new_index: int):
 
 def find_all_moves(game: Game) -> List[Tuple[Move, Game]]:
     return find_all_moves_helper(game, 0)
+
 
 def find_all_moves_helper(game: Game, move_counter: int):
     if move_counter == len(game):
@@ -108,13 +111,14 @@ def find_winning_moves_helper(game: Game, moves_so_far: List[Move]):
     valid_moves, new_games = list(zip(*all_moves_with_games))
 
     # Python equivalent of a lazy first in this map
-    for x in filter (lambda result: result is not None,
-            (map(
-                lambda valid_move, new_game_state:
-                    find_winning_moves_helper(new_game_state, moves_so_far + [valid_move]),
-            valid_moves, new_games
-    ))):
+    for x in filter(lambda result: result is not None,
+                    (map(
+                        lambda valid_move, new_game_state:
+                        find_winning_moves_helper(new_game_state, moves_so_far + [valid_move]),
+                        valid_moves, new_games
+                    ))):
         return x
+
 
 def game_is_won(game: Game):
     if not game:
@@ -126,6 +130,7 @@ def game_is_won(game: Game):
 
     rest_of_game = game[1:]
     return game_is_won(rest_of_game)
+
 
 def is_unwinnable_game(game: Game):
     return is_unwinnable_game_helper(game, [])
@@ -166,8 +171,10 @@ def is_unwinnable_game_helper(game: Game, seen_cards: Game):
 def num_face_up(game: Game):
     return count_game_condition(game, lambda card: is_face_up(card))
 
+
 def num_none(game: Game):
     return count_game_condition(game, lambda card: card is None)
+
 
 def count_game_condition(game: Game, condition: Callable[[Card], bool]) -> int:
     if not game:
@@ -179,11 +186,13 @@ def count_game_condition(game: Game, condition: Callable[[Card], bool]) -> int:
         else:
             return count_game_condition(game[1:], condition)
 
+
 def repr_game(game: Game):
     if not game:
         return ""
     card = game[0]
     return repr_card(card) + repr_game(game[1:])
+
 
 def repr_card(card: Card):
     if card is None:
@@ -192,6 +201,7 @@ def repr_card(card: Card):
         return "1"
     else:
         return "0"
+
 
 def repr_moves(moves: List[Move]):
     if not moves:
@@ -202,4 +212,3 @@ def repr_moves(moves: List[Move]):
         return str(move)
     else:
         return str(move) + " " + repr_moves(rest_of_moves)
-

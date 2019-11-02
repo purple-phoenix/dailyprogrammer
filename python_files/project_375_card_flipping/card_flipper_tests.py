@@ -1,5 +1,5 @@
 import unittest
-from card_flipper import *
+from python_files.project_375_card_flipping.card_flipper import *
 
 
 class TestCardFlipper(unittest.TestCase):
@@ -62,7 +62,6 @@ class TestCardFlipper(unittest.TestCase):
                           make_move(self.example_game, 1))
         self.assertEquals(None, make_move([False, True, False], 0))
 
-
     def test_should_flip_neighbor(self):
         self.assertTrue(should_flip_neighbor(0, 1))
         self.assertTrue(should_flip_neighbor(1, 2))
@@ -82,10 +81,10 @@ class TestCardFlipper(unittest.TestCase):
                           find_all_moves([True, True, True]))
         self.assertEquals(
             [
-                (0,[None, True, False, True, None, False, True]),
-                (3,[True, False, True, None, None, False, True]),
-                (6,[True, False, False, True, None, True, None])],
-                          find_all_moves([True, False, False, True, None, False, True]))
+                (0, [None, True, False, True, None, False, True]),
+                (3, [True, False, True, None, None, False, True]),
+                (6, [True, False, False, True, None, True, None])],
+            find_all_moves([True, False, False, True, None, False, True]))
 
     def test_find_winning_moves(self):
         self.assertEquals([1, 0, 2, 3, 5, 4, 6],
@@ -115,8 +114,6 @@ class TestCardFlipper(unittest.TestCase):
                                               ])
                           )
 
-
-
     def test_game_is_won(self):
         self.assertTrue(game_is_won([]))
         self.assertTrue(game_is_won([None]))
@@ -136,7 +133,6 @@ class TestCardFlipper(unittest.TestCase):
         self.assertTrue(is_unwinnable_game([False, False]))
         self.assertTrue(is_unwinnable_game([True, True]))
 
-
         self.assertTrue(is_unwinnable_game([False, True, True, None, False, False]))
         self.assertFalse(is_unwinnable_game([False, True, False, False, True, True, False]))
 
@@ -151,23 +147,24 @@ class TestCardFlipper(unittest.TestCase):
 
         # 5 True, 10 False
         self.assertFalse(is_unwinnable_game([True,
-                                              False,
-                                              False,
-                                              False,
-                                              False,
-                                              True,
-                                              True,
-                                              False,
-                                              False,
-                                              True,
-                                              False,
-                                              True,
-                                              False,
-                                              False,
-                                              False
-                                              ]))
+                                             False,
+                                             False,
+                                             False,
+                                             False,
+                                             True,
+                                             True,
+                                             False,
+                                             False,
+                                             True,
+                                             False,
+                                             True,
+                                             False,
+                                             False,
+                                             False
+                                             ]))
 
         self.assertFalse(is_unwinnable_game([True, None, True, False, True, True, False]))
+
     def test_num_face_up(self):
         self.assertEquals(1, num_face_up([True]))
         self.assertEquals(1, num_face_up([True, False]))
@@ -199,3 +196,10 @@ class TestCardFlipper(unittest.TestCase):
         self.assertEquals("0", repr_card(False))
         self.assertEquals("1", repr_card(True))
         self.assertEquals("*", repr_card(None))
+
+
+if __name__ == '__main__':
+    import xmlrunner
+    runner = xmlrunner.XMLTestRunner(output='test-reports')
+    unittest.main(testRunner=runner)
+    unittest.main()
