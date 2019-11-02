@@ -10,6 +10,7 @@ pipeline {
             steps {
                 sh 'python3 python_files/test.py'
                 junit 'python_files/results/*.xml'
+                deleteDir()
             }
         }
     }
