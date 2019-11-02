@@ -1,5 +1,5 @@
 import unittest
-from havel_hakimi import *
+from python_files.project_378_havel_hakimi.havel_hakimi import *
 
 
 class TestHavelHakimi(unittest.TestCase):
@@ -58,4 +58,7 @@ class TestHavelHakimi(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    import xmlrunner
+    runner = xmlrunner.XMLTestRunner(output='test-reports')
+    unittest.main(testRunner=runner)
     unittest.main()
