@@ -9,9 +9,14 @@ pipeline {
         stage('Python Unit Tests') {
             steps {
                 sh 'python3 python_files/test.py'
-                junit 'python_files/results/*.xml'
+            }
+        }
+        post {
+        always {
+                junit 'results/*.xml'
                 deleteDir()
             }
         }
     }
 }
+
