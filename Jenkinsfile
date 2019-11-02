@@ -11,11 +11,11 @@ pipeline {
                 sh 'python3 python_files/test.py'
             }
         }
-        post {
+    }
+    post {
         always {
-                junit 'results/*.xml'
-                deleteDir()
-            }
+            junit 'results/*.xml'
+            deleteDir()
         }
     }
 }
