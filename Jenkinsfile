@@ -9,11 +9,7 @@ pipeline {
         stage('Python Unit Tests') {
             steps {
                 sh 'python3 python_files/test.py'
-            }
-            post {
-                always {
-                  junit 'python_files/results/*.xml'
-                }
+                junit 'python_files/results/*.xml'
             }
         }
     }
