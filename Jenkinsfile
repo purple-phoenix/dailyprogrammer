@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Python Unit Tests') {
             steps {
-                sh 'python3 -m unittest discover python_files -p "*_tests.py"'
+                sh 'python3 python_files/test.py'
             }
             post {
                 always {
