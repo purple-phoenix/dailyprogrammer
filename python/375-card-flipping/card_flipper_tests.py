@@ -43,24 +43,24 @@ class TestCardFlipper(unittest.TestCase):
         self.assertFalse(is_face_up(self.face_down_card))
 
     def test_flip_card(self):
-        self.assertEquals(None, flip_card([], -1))
-        self.assertEquals(None, flip_card([], 1))
-        self.assertEquals(self.example_game_flipped_at_one,
+        self.assertEqual(None, flip_card([], -1))
+        self.assertEqual(None, flip_card([], 1))
+        self.assertEqual(self.example_game_flipped_at_one,
                           flip_card(self.example_game, 1))
-        self.assertEquals(self.example_game, flip_card(self.example_game, 0))
+        self.assertEqual(self.example_game, flip_card(self.example_game, 0))
 
     def test_flip_neighbors(self):
-        self.assertEquals(self.example_game_flipped_at_one_flipped_neighbors,
+        self.assertEqual(self.example_game_flipped_at_one_flipped_neighbors,
                           flip_neighbors(self.example_game_flipped_at_one, 1)
                           )
-        self.assertEquals([None, True, None], flip_neighbors([None, True, None], 1))
-        self.assertEquals([None, False, True], flip_neighbors([None, False, False], 1))
-        self.assertEquals(None, flip_neighbors(None, 0))
+        self.assertEqual([None, True, None], flip_neighbors([None, True, None], 1))
+        self.assertEqual([None, False, True], flip_neighbors([None, False, False], 1))
+        self.assertEqual(None, flip_neighbors(None, 0))
 
     def test_make_move(self):
-        self.assertEquals(self.example_game_flipped_at_one_flipped_neighbors,
+        self.assertEqual(self.example_game_flipped_at_one_flipped_neighbors,
                           make_move(self.example_game, 1))
-        self.assertEquals(None, make_move([False, True, False], 0))
+        self.assertEqual(None, make_move([False, True, False], 0))
 
 
     def test_should_flip_neighbor(self):
@@ -71,16 +71,16 @@ class TestCardFlipper(unittest.TestCase):
         self.assertFalse(should_flip_neighbor(0, 2))
 
     def test_flip_neighbor(self):
-        self.assertEquals(True, flip_neighbor(0, 2, True))
-        self.assertEquals(None, flip_neighbor(0, 1, None))
-        self.assertEquals(True, flip_neighbor(0, 1, False))
-        self.assertEquals(False, flip_neighbor(1, 2, True))
+        self.assertEqual(True, flip_neighbor(0, 2, True))
+        self.assertEqual(None, flip_neighbor(0, 1, None))
+        self.assertEqual(True, flip_neighbor(0, 1, False))
+        self.assertEqual(False, flip_neighbor(1, 2, True))
 
     def test_find_all_moves(self):
-        self.assertEquals([(0, [None, None, None])], find_all_moves([True, None, None]))
-        self.assertEquals([(0, [None, False, True]), (1, [False, None, False]), (2, [True, False, None])],
+        self.assertEqual([(0, [None, None, None])], find_all_moves([True, None, None]))
+        self.assertEqual([(0, [None, False, True]), (1, [False, None, False]), (2, [True, False, None])],
                           find_all_moves([True, True, True]))
-        self.assertEquals(
+        self.assertEqual(
             [
                 (0,[None, True, False, True, None, False, True]),
                 (3,[True, False, True, None, None, False, True]),
@@ -88,15 +88,15 @@ class TestCardFlipper(unittest.TestCase):
                           find_all_moves([True, False, False, True, None, False, True]))
 
     def test_find_winning_moves(self):
-        self.assertEquals([1, 0, 2, 3, 5, 4, 6],
+        self.assertEqual([1, 0, 2, 3, 5, 4, 6],
                           find_winning_moves([False, True, False, False, True, True, False])
                           )
 
-        self.assertEquals(None,
+        self.assertEqual(None,
                           find_winning_moves([False, True, False, False, True, True, False, False, True, True, True])
                           )
 
-        self.assertEquals([0, 1, 2, 3, 4, 6, 5, 7, 8, 11, 10, 9, 12, 13, 14],
+        self.assertEqual([0, 1, 2, 3, 4, 6, 5, 7, 8, 11, 10, 9, 12, 13, 14],
                           find_winning_moves([True,
                                               False,
                                               False,
@@ -169,33 +169,33 @@ class TestCardFlipper(unittest.TestCase):
 
         self.assertFalse(is_unwinnable_game([True, None, True, False, True, True, False]))
     def test_num_face_up(self):
-        self.assertEquals(1, num_face_up([True]))
-        self.assertEquals(1, num_face_up([True, False]))
-        self.assertEquals(1, num_face_up([None, True, False, None]))
-        self.assertEquals(0, num_face_up([]))
-        self.assertEquals(0, num_face_up([None]))
-        self.assertEquals(0, num_face_up([False]))
-        self.assertEquals(3, num_face_up([True, False, None, False, True, True]))
+        self.assertEqual(1, num_face_up([True]))
+        self.assertEqual(1, num_face_up([True, False]))
+        self.assertEqual(1, num_face_up([None, True, False, None]))
+        self.assertEqual(0, num_face_up([]))
+        self.assertEqual(0, num_face_up([None]))
+        self.assertEqual(0, num_face_up([False]))
+        self.assertEqual(3, num_face_up([True, False, None, False, True, True]))
 
     def test_num_none(self):
-        self.assertEquals(0, num_none([True]))
-        self.assertEquals(0, num_none([True, False]))
-        self.assertEquals(2, num_none([None, True, False, None]))
-        self.assertEquals(0, num_none([]))
-        self.assertEquals(1, num_none([None]))
-        self.assertEquals(0, num_none([False]))
-        self.assertEquals(1, num_none([True, False, None, False, True, True]))
+        self.assertEqual(0, num_none([True]))
+        self.assertEqual(0, num_none([True, False]))
+        self.assertEqual(2, num_none([None, True, False, None]))
+        self.assertEqual(0, num_none([]))
+        self.assertEqual(1, num_none([None]))
+        self.assertEqual(0, num_none([False]))
+        self.assertEqual(1, num_none([True, False, None, False, True, True]))
 
     def test_repr_game(self):
-        self.assertEquals("", repr_game([]))
-        self.assertEquals("01001101", repr_game([False, True, False, False, True, True, False, True]))
-        self.assertEquals("0*00*11*", repr_game([False, None, False, False, None, True, True, None]))
+        self.assertEqual("", repr_game([]))
+        self.assertEqual("01001101", repr_game([False, True, False, False, True, True, False, True]))
+        self.assertEqual("0*00*11*", repr_game([False, None, False, False, None, True, True, None]))
 
     def test_repr_moves(self):
-        self.assertEquals("", repr_moves([]))
-        self.assertEquals("1 2 5 8", repr_moves([1, 2, 5, 8]))
+        self.assertEqual("", repr_moves([]))
+        self.assertEqual("1 2 5 8", repr_moves([1, 2, 5, 8]))
 
     def test_repr_card(self):
-        self.assertEquals("0", repr_card(False))
-        self.assertEquals("1", repr_card(True))
-        self.assertEquals("*", repr_card(None))
+        self.assertEqual("0", repr_card(False))
+        self.assertEqual("1", repr_card(True))
+        self.assertEqual("*", repr_card(None))
