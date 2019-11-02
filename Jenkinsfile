@@ -12,7 +12,7 @@ pipeline {
             }
             post {
                 always {
-                  junit 'test-reports/*.xml'
+                  junit 'python_files/results/*.xml'
                 }
             }
         }

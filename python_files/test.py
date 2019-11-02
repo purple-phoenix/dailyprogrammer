@@ -6,7 +6,7 @@ import xmlrunner
 def test_all():
     loader = unittest.TestLoader()
     suites = loader.discover(".", "*_tests.py")
-    runner = xmlrunner.XMLTestRunner("results.xml")
+    runner = xmlrunner.XMLTestRunner("results")
     for suite in suites:
         runner.run(suite)
 
