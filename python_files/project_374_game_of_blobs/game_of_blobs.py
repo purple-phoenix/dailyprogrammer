@@ -25,5 +25,11 @@ def merge_blobs_helper(blobs: List[Blob], observed_blobs: List[Blob]) -> List[Bl
         return observed_blobs
     else:
         blob = blobs[0]
-        pass
+        unobserved_blobs = blobs[1:]
+        updated_observed_blobs = update_observed_blobs(blob, observed_blobs)
+        return merge_blobs_helper(unobserved_blobs, updated_observed_blobs)
+
+
+def update_observed_blobs(new_blob: Blob, already_observed_blobs) -> List[Blob]:
+    pass
 
