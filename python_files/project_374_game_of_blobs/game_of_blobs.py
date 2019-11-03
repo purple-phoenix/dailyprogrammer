@@ -46,7 +46,10 @@ def clockwise_prioritization(blob: Blob, unit_directions_to_largest_blobs: List[
 
 # Find smaller blobs and how far away they are from this blob
 def find_smaller_blobs(blob: Blob, other_blobs: List[Blob]) -> List[Tuple[Blob, int]]:
-    pass
+    smaller_blobs = list(filter(lambda other_blob: other_blob[2] < blob[2], other_blobs))
+    mapped_blobs_with_distances = list(map(lambda smaller_blob: (smaller_blob, get_blob_distance(smaller_blob, blob))
+                                           , smaller_blobs))
+    return mapped_blobs_with_distances
 
 
 def merge_blobs(blobs: List[Blob]) -> List[Blob]:

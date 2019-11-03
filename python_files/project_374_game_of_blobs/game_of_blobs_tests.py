@@ -63,8 +63,8 @@ class TestGameOfBlobs(unittest.TestCase):
             (3, 5, 4),
             (2, 2, 4)
         ]
-        self.assertEqual([((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)],
-                         find_smaller_blobs((4, 5, 5), many_blobs)
+        self.assertEqual(set([((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]),
+                         set(find_smaller_blobs((4, 5, 5), many_blobs))
                          )
 
     def test_get_blob_distance(self):
