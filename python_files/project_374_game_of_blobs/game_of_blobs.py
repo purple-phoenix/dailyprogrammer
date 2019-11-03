@@ -44,6 +44,11 @@ def clockwise_prioritization(blob: Blob, unit_directions_to_largest_blobs: List[
     pass
 
 
+# Find smaller blobs and how far away they are from this blob
+def find_smaller_blobs(blob: Blob, other_blobs: List[Blob]) -> List[Tuple[Blob, int]]:
+    pass
+
+
 def merge_blobs(blobs: List[Blob]) -> List[Blob]:
     return merge_blobs_helper(blobs, [])
 
@@ -80,3 +85,9 @@ def merge_two_blobs(blob_a: Blob, blob_b: Blob) -> Blob:
 
 def blobs_equal(blob_a: Blob, blob_b: Blob) -> bool:
     return positions_equal(blob_a, blob_b) and blob_a[2] == blob_b[2]
+
+
+def get_blob_distance(blob_a: Blob, blob_b: Blob) -> int:
+    x_distance = abs(blob_a[0] - blob_b[0])
+    y_distance = abs(blob_a[1] - blob_b[1])
+    return max(x_distance, y_distance)

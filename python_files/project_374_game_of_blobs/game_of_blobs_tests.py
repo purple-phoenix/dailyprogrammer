@@ -54,6 +54,26 @@ class TestGameOfBlobs(unittest.TestCase):
         self.assertFalse(blobs_equal((1, 2, 1), (1, 1, 1)))
         self.assertFalse(blobs_equal((1, 1, 1), (1, 1, 2)))
 
+    def test_find_smaller_blobs(self):
+        many_blobs = [
+            (1, 2, 3),
+            (2, 5, 6),
+            (4, 8, 2),
+            (7, 9, 4),
+            (3, 5, 4),
+            (2, 2, 4)
+        ]
+        self.assertEqual([((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)],
+                         find_smaller_blobs((4, 5, 5), many_blobs)
+                         )
+
+    def test_get_blob_distance(self):
+        comparison_blob = (4, 5, 5)
+        self.assertEqual(3, get_blob_distance((1, 2, 3), comparison_blob))
+        self.assertEqual(3, get_blob_distance((2, 2, 4), comparison_blob))
+        self.assertEqual(2, get_blob_distance((2, 5, 6), comparison_blob))
+        self.assertEqual(4, get_blob_distance((7, 9, 4), comparison_blob))
+
 
 if __name__ == '__main__':
     unittest.main()
