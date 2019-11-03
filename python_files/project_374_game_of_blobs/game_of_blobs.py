@@ -13,7 +13,9 @@ def blob_tick(blobs: List[Blob]) -> List[Blob]:
 
 
 def move_blobs(blobs: List[Blob]) -> List[Blob]:
-    return list(map(lambda ablob: move_blob_helper(ablob, blobs)))
+    return list(map(
+        lambda a_blob: move_blob_helper(a_blob, blobs),
+        blobs))
 
 
 def move_blob_helper(blob: Blob, all_blobs: List[Blob]) -> Blob:
@@ -22,7 +24,15 @@ def move_blob_helper(blob: Blob, all_blobs: List[Blob]) -> Blob:
 
 
 def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
-    pass
+    if not all_blobs:
+        return []
+    else:
+        this_blob = all_blobs[0]
+        other_blobs = all_blobs[1:]
+        if blobs_equal(this_blob, blob):
+            return other_blobs
+        else:
+            return [this_blob] + remove_this_blob(blob, other_blobs)
 
 
 # Returns the moved blob. New blob is one unit closer to the largest blob. Ties going Clockwise
@@ -66,3 +76,7 @@ def positions_equal(blob_a: Blob, blob_b: Blob) -> bool:
 
 def merge_two_blobs(blob_a: Blob, blob_b: Blob) -> Blob:
     return blob_a[0], blob_b[1], (blob_a[2] + blob_b[2])
+
+
+def blobs_equal(blob_a: Blob, blob_b: Blob) -> bool:
+    return positions_equal(blob_a, blob_b) and blob_a[2] == blob_b[2]

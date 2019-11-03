@@ -45,6 +45,15 @@ class TestGameOfBlobs(unittest.TestCase):
     def test_merge_two_blobs(self):
         self.assertEqual((1, 1, 7), merge_two_blobs((1, 1, 3), (1, 1, 4)))
 
+    def test_remove_this_blob(self):
+        self.assertEqual([(1, 1, 1), (1, 2, 2)], remove_this_blob((1, 2, 3),
+                                                                  [(1, 1, 1), (1, 2, 2), (1, 2, 3)]))
+
+    def test_blobs_equal(self):
+        self.assertTrue(blobs_equal((1, 1, 1), (1, 1, 1)))
+        self.assertFalse(blobs_equal((1, 2, 1), (1, 1, 1)))
+        self.assertFalse(blobs_equal((1, 1, 1), (1, 1, 2)))
+
 
 if __name__ == '__main__':
     unittest.main()
