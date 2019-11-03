@@ -20,7 +20,7 @@ def move_blobs(blobs: List[Blob]) -> List[Blob]:
 
 def move_blob_helper(blob: Blob, all_blobs: List[Blob]) -> Blob:
     other_blobs = remove_this_blob(blob, all_blobs)
-    return find_unit_path_to_largest_blob(blob, other_blobs)
+    return move_blob_toward_largest_smaller_blob(blob, other_blobs)
 
 
 def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
@@ -36,7 +36,7 @@ def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
 
 
 # Returns the moved blob. New blob is one unit closer to the largest blob. Ties going Clockwise
-def find_unit_path_to_largest_blob(blob: Blob, other_blobs: List[Blob]) -> Blob:
+def move_blob_toward_largest_smaller_blob(blob: Blob, other_blobs: List[Blob]) -> Blob:
     pass
 
 
