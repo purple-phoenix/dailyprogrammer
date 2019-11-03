@@ -17,7 +17,7 @@ def move_blobs(blobs: List[Blob]) -> List[Blob]:
 
 
 def merge_blobs(blobs: List[Blob]) -> List[Blob]:
-    return merge_blobs(blobs, [])
+    return merge_blobs_helper(blobs, [])
 
 
 def merge_blobs_helper(blobs: List[Blob], observed_blobs: List[Blob]) -> List[Blob]:

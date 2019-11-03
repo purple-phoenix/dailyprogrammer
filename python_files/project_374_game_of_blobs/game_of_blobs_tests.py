@@ -22,8 +22,8 @@ class TestGameOfBlobs(unittest.TestCase):
         initial_blobs = [(0, 2, 1), (2, 1, 2)]
         one_tick = [(0, 2, 1), (1, 1, 2)]
         two_tick = [(0, 2, 3)]
-        self.assertEqual(one_tick, merge_blobs(initial_blobs))
-        self.assertEqual(two_tick, merge_blobs(one_tick))
+        self.assertEqual(set(one_tick), set(merge_blobs(initial_blobs)))
+        self.assertEqual(set(two_tick), set(merge_blobs(one_tick)))
 
     def test_update_observed_blobs(self):
         observed_blobs = [(1, 1, 1), (1, 2, 3), (3, 5, 7), (2, 2, 1), (5, 7, 8)]
