@@ -37,6 +37,11 @@ class TestGameOfBlobs(unittest.TestCase):
         self.assertEqual([(1, 1, 4), (1, 2, 3), (2, 3, 1), (3, 5, 18), (2, 2, 1), (5, 7, 8)],
                          update_observed_blobs(unseen_blob, observed_blobs))
 
+    def test_positions_equal(self):
+        self.assertTrue(positions_equal((1, 1, 1), (1, 1, 4)))
+        self.assertFalse(positions_equal((1, 9, 1), (1, 1, 1)))
+        self.assertFalse(positions_equal((2, 1, 1), (3, 1, 1)))
+
 
 if __name__ == '__main__':
     unittest.main()
