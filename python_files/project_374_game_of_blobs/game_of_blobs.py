@@ -13,6 +13,24 @@ def blob_tick(blobs: List[Blob]) -> List[Blob]:
 
 
 def move_blobs(blobs: List[Blob]) -> List[Blob]:
+    return list(map(lambda ablob: move_blob_helper(ablob, blobs)))
+
+
+def move_blob_helper(blob: Blob, all_blobs: List[Blob]) -> Blob:
+    other_blobs = remove_this_blob(blob, all_blobs)
+    return find_unit_path_to_largest_blob(blob, other_blobs)
+
+
+def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
+    pass
+
+
+# Returns the moved blob. New blob is one unit closer to the largest blob. Ties going Clockwise
+def find_unit_path_to_largest_blob(blob: Blob, other_blobs: List[Blob]) -> Blob:
+    pass
+
+
+def clockwise_prioritization(blob: Blob, unit_directions_to_largest_blobs: List[Blob]) -> Blob:
     pass
 
 
