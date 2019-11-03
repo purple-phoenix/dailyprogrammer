@@ -75,3 +75,50 @@ Bonus Challenges
 Credits
 This challenge was suggested by /user/tomekanco, many thanks! Have a good challenge idea? Consider submitting it to
 r/dailyprogrammer_ideas and there's a good chance we'll use it.
+
+
+
+Sorry for the confusion and late reaction. I was at an evening lecture. (Autoencoders as preprocessing for anomaly detection, cool stuff)
+
+To clarify things:
+
+All blobs choose their destination at the same moment, move, and merge at the same moment.
+
+It's possible that you'll end up with more than 1 blob in the end.
+
+Larger blobs can merge, for example when moving towards a common goal.
+
+Often one will end up trailing another for some time.
+
+The clockwise rule in 2D means if you have 3 nodes at equal distance, and all equal size, say one at 1 o'clock, one at 5 and one at 11 o clock, you'll choose the one at 1.
+
+The clockwise rule in 3D.
+
+As blobs try to minimize the distance, their will be a preference for diagonal moves.
+
+Example:
+Given: [(2,0,1),(1,2,2)] as a list of (x,y and size)
+
+A representation where x is horizontal, y is vertical. Each grid represents the state at the start of an iteration, or the final state.
+
+..1    ..1    ..3
+...    ..2    ...
+.2.    ...    ...
+Solution: [(0,2)] (coordinate) or [(0,2,3)] (including size)
+
+Help the blobs break out of flatland.
+Given: [(1,1),(4,2)] (x-coordinate and size)
+
+.1..2    .1.2.    .12..    .3...
+A solution: [(1)] or [(1,3)]
+
+Given [(2,0,0,1),(0,1,1,2)] (x,y,z and size)
+
+A representation where x is horizontal, y is vertical and z the second layer (or n others, just like a 3D array).
+
+..1    .21    ..3
+...    ...    ...
+/      /      /
+...    ...    ...
+2..    ...    ...
+A solution [(2,0,0)] or [(2,0,0,3)]
