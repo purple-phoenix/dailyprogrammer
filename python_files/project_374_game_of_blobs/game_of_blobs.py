@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 
 # Blobs are represented as a x position, y position and size
 # Positions are zero indexed, Blobs of size zero represented empty spaces
@@ -37,7 +37,37 @@ def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
 
 # Returns the moved blob. New blob is one unit closer to the largest blob. Ties going Clockwise
 def move_blob_toward_largest_smaller_blob(blob: Blob, other_blobs: List[Blob]) -> Blob:
-    pass
+    smaller_blobs_with_distances = find_smaller_blobs(blob, other_blobs)
+
+
+def get_largest_smaller_blobs(blob: Blob,
+                              smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
+
+    return get_largest_smaller_blobs_helper(blob, smaller_blobs_and_distances, [])
+
+
+def get_largest_smaller_blobs_helper(blob: Blob,
+                                     smaller_blobs_and_distances: List[Tuple[Blob, int]],
+                                     largest_blobs_so_far: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
+    if not smaller_blobs_and_distances:
+        return largest_blobs_so_far
+    else:
+        this_blob_and_distance = smaller_blobs_and_distances[0]
+        rest_of_blobs = smaller_blobs_and_distances[1:]
+        size_of_this_blob = this_blob_and_distance[0][2]
+        if not largest_blobs_so_far:
+            return get_largest_smaller_blobs_helper(blob, rest_of_blobs, [this_blob_and_distance])
+        else:
+            # Get first in list then get size. All entries in this list will have the same size based on elif
+            size_of_largest_blobs_so_far = largest_blobs_so_far[0][0][2]
+            if size_of_this_blob > size_of_largest_blobs_so_far:
+                return get_largest_smaller_blobs_helper(blob, rest_of_blobs, [this_blob_and_distance])
+            elif size_of_this_blob == size_of_largest_blobs_so_far:
+                return get_largest_smaller_blobs_helper(blob,
+                                                        rest_of_blobs,
+                                                        largest_blobs_so_far + [this_blob_and_distance])
+            else:
+                return get_largest_smaller_blobs_helper(blob, rest_of_blobs, largest_blobs_so_far)
 
 
 def clockwise_prioritization(blob: Blob, unit_directions_to_largest_blobs: List[Blob]) -> Blob:
