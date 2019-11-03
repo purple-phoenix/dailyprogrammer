@@ -35,10 +35,16 @@ def update_observed_blobs(new_blob: Blob, already_observed_blobs) -> List[Blob]:
         return [new_blob]
     observed_blob = already_observed_blobs[0]
     rest_of_observed_blobs = already_observed_blobs[1:]
-    pass
+    if positions_equal(new_blob, observed_blob):
+        merged_blob = merge_two_blobs(new_blob, observed_blob)
+        return update_observed_blobs(merged_blob, rest_of_observed_blobs)
+    else:
+        return [observed_blob] + update_observed_blobs(new_blob, rest_of_observed_blobs)
 
 
 def positions_equal(blob_a: Blob, blob_b: Blob) -> bool:
     return blob_a[0] == blob_b[0] and blob_a[1] == blob_b[1]
 
 
+def merge_two_blobs(blob_a: Blob, blob_b: Blob) -> Blob:
+    return blob_a[0], blob_b[1], (blob_a[2] + blob_b[2])
