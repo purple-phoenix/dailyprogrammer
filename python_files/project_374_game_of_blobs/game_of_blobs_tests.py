@@ -19,11 +19,11 @@ class TestGameOfBlobs(unittest.TestCase):
         self.assertEqual(two_tick, move_blobs(one_tick))
 
     def test_merge_blobs(self):
-        initial_blobs = [(0, 2, 1), (2, 1, 2)]
-        one_tick = [(0, 2, 1), (1, 1, 2)]
-        two_tick = [(0, 2, 3)]
-        self.assertEqual(set(one_tick), set(merge_blobs(initial_blobs)))
-        self.assertEqual(set(two_tick), set(merge_blobs(one_tick)))
+        no_merge = [(0, 2, 1), (2, 1, 2)]
+        before_merge = [(0, 2, 1), (0, 2, 2)]
+        after_merge = [(0, 2, 3)]
+        self.assertEqual(set(no_merge), set(merge_blobs(no_merge)))
+        self.assertEqual(set(after_merge), set(merge_blobs(before_merge)))
 
     def test_update_observed_blobs(self):
         observed_blobs = [(1, 1, 1), (1, 2, 3), (3, 5, 7), (2, 2, 1), (5, 7, 8)]
