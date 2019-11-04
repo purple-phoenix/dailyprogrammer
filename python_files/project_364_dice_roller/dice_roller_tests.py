@@ -20,7 +20,7 @@ class TestDiceRoller(unittest.TestCase):
             num_dice = die_input[0]
             num_sides = die_input[1]
             output = dice_output[index]
-            self.assertTrue(1*num_dice <= dice_output <= num_sides*num_dice)
+            self.assertTrue(1*num_dice <= output <= num_sides*num_dice)
 
 
 if __name__ == '__main__':
