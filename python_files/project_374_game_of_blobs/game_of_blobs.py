@@ -157,7 +157,7 @@ def clockwise_prioritization(blob: Blob, potential_blobs: List[Blob], most_clock
     if most_clockwise_so_far is None and not potential_blobs:
         return blob # Don't move
     elif not potential_blobs:
-        return most_clockwise_so_far # Found most clockwise
+        return most_clockwise_so_far  # Found most clockwise
     else:
         first_potential_blob = potential_blobs[0]
         rest_potential_blobs = potential_blobs[1:]
@@ -175,18 +175,50 @@ def more_clockwise(blob: Blob, pot_blob: Blob, current_best: Blob) -> bool:
 
     current_best_x_diff = current_best[0] - blob[0]
     current_best_y_diff = current_best[1] - blob[1]
-    # If potential is at 12 then only not better if current best is too (which can't happen based on the game)
-    if pot_y_diff == 0 and pot_x_diff < 0:
-        return not (current_best_y_diff == 0 and current_best_x_diff < 0)
-    # If not at 12 then check if pot y is greater than zero (right of six o'clock) and current best is not)
-    elif pot_y_diff > 0 and current_best_x_diff < 0:
+
+    # Not a huge fan of this. Took a lot of googling around and debugging but it works
+
+    # 12 oclock
+    if pot_x_diff == -1 and pot_y_diff == 0:
         return True
-    elif pot_x_diff < 0:
-        # Both are right of six, check if pot x is less than current best x(closer to 3)
-        return pot_x_diff < current_best_x_diff
-    else:
-        # Both are left of six, check if post x is greater than current best x
-        return pot_x_diff > current_best_x_diff
+    elif current_best_x_diff == -1 and current_best_y_diff == 0:
+        return False
+
+    if pot_y_diff >= 0 and current_best_y_diff < 0:
+        return True
+    elif current_best_y_diff >=0 and pot_y_diff < 0:
+        return False
+
+    if pot_y_diff >= 0 and current_best_y_diff >= 0:
+        if pot_x_diff < current_best_x_diff:
+            return True
+        else:
+            return False
+
+    if pot_y_diff < 0 and current_best_y_diff < 0:
+        if pot_x_diff > current_best_x_diff:
+            return True
+        else:
+            return False
+
+    return True
+
+
+def northeast(x_diff, y_diff):
+    return x_diff < 0 and y_diff < 0
+
+
+def southeast(x_diff, y_diff):
+    return x_diff < 0 and y_diff > 0
+
+
+def southwest(x_diff, y_diff):
+    return x_diff > 0 and y_diff > 0
+
+
+def northwest(x_diff, y_diff):
+    return x_diff > 0 and y_diff < 0
+
 
 # Find smaller blobs and how far away they are from this blob
 def find_smaller_blobs(blob: Blob, other_blobs: List[Blob]) -> List[Tuple[Blob, int]]:

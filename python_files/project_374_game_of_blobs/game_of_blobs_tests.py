@@ -8,15 +8,15 @@ class TestGameOfBlobs(unittest.TestCase):
         initial_blobs = [(0, 2, 1), (2, 1, 2)]
         one_tick = [(0, 2, 1), (1, 2, 2)]
         two_tick = [(0, 2, 3)]
-        self.assertEqual(one_tick, blob_tick(initial_blobs))
-        self.assertEqual(two_tick, blob_tick(one_tick))
+        self.assertEqual(set(one_tick), set(blob_tick(initial_blobs)))
+        self.assertEqual(set(two_tick), set(blob_tick(one_tick)))
 
     def test_move_blob(self):
         initial_blobs = [(0, 2, 1), (2, 1, 2)]
         one_tick = [(0, 2, 1), (1, 2, 2)]
         two_tick = [(0, 2, 1), (0, 2, 2)]
-        self.assertEqual(one_tick, move_blobs(initial_blobs))
-        self.assertEqual(two_tick, move_blobs(one_tick))
+        self.assertEqual(set(one_tick), set(move_blobs(initial_blobs)))
+        self.assertEqual(set(two_tick), set(move_blobs(one_tick)))
 
     def test_merge_blobs(self):
         no_merge = [(0, 2, 1), (2, 1, 2)]
@@ -136,12 +136,18 @@ class TestGameOfBlobs(unittest.TestCase):
         eight_o_clock = (2, 0, 1)
         eleven_o_clock = (0, 0, 1)
         five_o_clock = (2, 2, 1)
+        nine_o_clock = (1, 0, 1)
         self.assertTrue(more_clockwise(comparison_blob, twelve_o_clock, one_o_clock))
         self.assertTrue(more_clockwise(comparison_blob, one_o_clock, six_o_clock))
         self.assertFalse(more_clockwise(comparison_blob, eight_o_clock, six_o_clock))
         self.assertTrue(more_clockwise(comparison_blob, twelve_o_clock, eleven_o_clock))
         self.assertTrue(more_clockwise(comparison_blob, five_o_clock, eleven_o_clock))
         self.assertTrue(more_clockwise(comparison_blob, one_o_clock, five_o_clock))
+        self.assertTrue(more_clockwise(comparison_blob, twelve_o_clock, six_o_clock))
+        self.assertTrue(more_clockwise(comparison_blob, one_o_clock, six_o_clock))
+        self.assertFalse(more_clockwise(comparison_blob, eight_o_clock, one_o_clock))
+        self.assertFalse(more_clockwise(comparison_blob, nine_o_clock, eight_o_clock))
+        self.assertFalse(more_clockwise(comparison_blob, six_o_clock, one_o_clock))
 
     def test_move_towards(self):
         blob_to_move_toward = (0, 2, 1)
