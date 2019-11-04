@@ -42,7 +42,7 @@ def move_blob_toward_largest_smaller_blob(blob: Blob, other_blobs: List[Blob]) -
     largest_closest_smaller_blobs = get_largest_blobs(closest_smaller_blobs)
     # Get just the Blobs no distances
     blobs_to_move_towards = list(map(lambda blob_and_distance: blob_and_distance[0], largest_closest_smaller_blobs))
-    moved_blob = clockwise_prioritization(blob, blobs_to_move_towards)
+    moved_blob = blob_to_move_towards(blob, blobs_to_move_towards)
     return moved_blob
 
 
@@ -121,11 +121,31 @@ def get_conditionest_blobs_helper(condition_for_replace: Callable[[Tuple[Blob, i
                                                      conditionest_blobs_so_far)
 
 
-def clockwise_prioritization(blob: Blob, potential_blobs_to_move_towards: List[Blob]) -> Blob:
-    return clockwise_prioritization(blob, potential_blobs_to_move_towards, None)
+def blob_to_move_towards(blob: Blob, potential_blobs_to_move_towards: List[Blob]) -> Blob:
+
+    the_blob_to_move_towards = clockwise_prioritization(blob, potential_blobs_to_move_towards, None)
+    return move_towards(blob, the_blob_to_move_towards)
 
 
-def clockwise_prior_helper(blob: Blob, potential_blobs: List[Blob], most_clockwise_so_far) -> Blob:
+def move_towards(blob: Blob, towards: Blob) -> Blob:
+    x_diff = towards[0] - blob[0]
+    y_diff = towards[1] - blob[1]
+    # No option for diagonal move
+    if y_diff == 0:
+        return blob[0] + 1, blob[1], blob[2]
+    elif x_diff == 0:
+        return blob[0], blob[1] + 1, blob[2]
+    elif y_diff > 0 and x_diff > 0:
+        return blob[0] + 1, blob[1] + 1, blob[2]
+    elif y_diff > 0:
+        return blob[0] - 1, blob[1] + 1, blob[2]
+    elif y_diff < 0 and x_diff < 0:
+        return blob[0] - 1, blob[1] - 1, blob[2]
+    else:
+        return blob[0] + 1, blob[1] - 1, blob[2]
+
+
+def clockwise_prioritization(blob: Blob, potential_blobs: List[Blob], most_clockwise_so_far) -> Blob:
     if most_clockwise_so_far is None and not potential_blobs:
         return blob # Don't move
     elif not potential_blobs:
@@ -134,11 +154,11 @@ def clockwise_prior_helper(blob: Blob, potential_blobs: List[Blob], most_clockwi
         first_potential_blob = potential_blobs[0]
         rest_potential_blobs = potential_blobs[1:]
         if most_clockwise_so_far is None:
-            return clockwise_prior_helper(blob, rest_potential_blobs, first_potential_blob)
+            return clockwise_prioritization(blob, rest_potential_blobs, first_potential_blob)
         elif more_clockwise(blob, first_potential_blob, most_clockwise_so_far):
-            return clockwise_prior_helper(blob, rest_potential_blobs, first_potential_blob)
+            return clockwise_prioritization(blob, rest_potential_blobs, first_potential_blob)
         else:
-            return clockwise_prior_helper(blob, rest_potential_blobs, most_clockwise_so_far)
+            return clockwise_prioritization(blob, rest_potential_blobs, most_clockwise_so_far)
 
 
 def more_clockwise(blob: Blob, pot_blob: Blob, current_best: Blob) -> bool:
