@@ -128,13 +128,21 @@ def blob_to_move_towards(blob: Blob, potential_blobs_to_move_towards: List[Blob]
 
 
 def move_towards(blob: Blob, towards: Blob) -> Blob:
+    if blobs_equal(blob, towards):
+        return blob
     x_diff = towards[0] - blob[0]
     y_diff = towards[1] - blob[1]
     # No option for diagonal move
     if y_diff == 0:
-        return blob[0] + 1, blob[1], blob[2]
+        if x_diff > 0:
+            return blob[0] + 1, blob[1], blob[2]
+        else:
+            return blob[0] - 1, blob[1], blob[2]
     elif x_diff == 0:
-        return blob[0], blob[1] + 1, blob[2]
+        if y_diff > 0:
+            return blob[0], blob[1] + 1, blob[2]
+        else:
+            return blob[0], blob[1] - 1, blob[2]
     elif y_diff > 0 and x_diff > 0:
         return blob[0] + 1, blob[1] + 1, blob[2]
     elif y_diff > 0:
