@@ -10,6 +10,11 @@ DiceRoll = Tuple[int, int]
 DiceInput = List[DiceRoll]
 
 
+def dice_roll(input: List[str]) -> List[int]:
+    dice_input = convert_input_str_to_dice_input(input)
+    return roll_dice(dice_input)
+
+
 def roll_dice(dice_input: DiceInput) -> List[int]:
     return list(map(roll_die, dice_input))
 
