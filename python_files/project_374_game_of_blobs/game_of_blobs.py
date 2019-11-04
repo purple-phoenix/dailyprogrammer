@@ -38,10 +38,15 @@ def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
 # Returns the moved blob. New blob is one unit closer to the largest blob. Ties going Clockwise
 def move_blob_toward_largest_smaller_blob(blob: Blob, other_blobs: List[Blob]) -> Blob:
     smaller_blobs_with_distances = find_smaller_blobs(blob, other_blobs)
-    closest_smaller_blobs = get_closest_smaller_blobs(smaller_blobs_with_distances)
+    closest_smaller_blobs = get_closest_blobs(smaller_blobs_with_distances)
+    largest_closest_smaller_blobs = get_largest_blobs(closest_smaller_blobs)
+    # Get just the Blobs no distances
+    blobs_to_move_towards = list(map(lambda blob_and_distance: blob_and_distance[0], largest_closest_smaller_blobs))
+    moved_blob = clockwise_prioritization(blob, blobs_to_move_towards)
+    return moved_blob
 
 
-def get_closest_smaller_blobs(smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Blob]:
+def get_closest_blobs(smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Blob]:
     return get_conditionest_blobs_helper(blob_is_closer, blob_is_same_distance, smaller_blobs_and_distances, [])
 
 
@@ -53,7 +58,7 @@ def blob_is_same_distance(blob_and_distance: Tuple[Blob, int], current_best: Tup
     return blob_and_distance[1] == current_best[1]
 
 
-def get_largest_smaller_blobs(smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
+def get_largest_blobs(smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
 
     return get_conditionest_blobs_helper(blob_is_larger,
                                          blob_is_same_size,
@@ -116,9 +121,44 @@ def get_conditionest_blobs_helper(condition_for_replace: Callable[[Tuple[Blob, i
                                                      conditionest_blobs_so_far)
 
 
-def clockwise_prioritization(blob: Blob, largest_: List[Blob]) -> Blob:
-    pass
+def clockwise_prioritization(blob: Blob, potential_blobs_to_move_towards: List[Blob]) -> Blob:
+    return clockwise_prioritization(blob, potential_blobs_to_move_towards, None)
 
+
+def clockwise_prior_helper(blob: Blob, potential_blobs: List[Blob], most_clockwise_so_far) -> Blob:
+    if most_clockwise_so_far is None and not potential_blobs:
+        return blob # Don't move
+    elif not potential_blobs:
+        return most_clockwise_so_far # Found most clockwise
+    else:
+        first_potential_blob = potential_blobs[0]
+        rest_potential_blobs = potential_blobs[1:]
+        if most_clockwise_so_far is None:
+            return clockwise_prior_helper(blob, rest_potential_blobs, first_potential_blob)
+        elif more_clockwise(blob, first_potential_blob, most_clockwise_so_far):
+            return clockwise_prior_helper(blob, rest_potential_blobs, first_potential_blob)
+        else:
+            return clockwise_prior_helper(blob, rest_potential_blobs, most_clockwise_so_far)
+
+
+def more_clockwise(blob: Blob, pot_blob: Blob, current_best: Blob) -> bool:
+    pot_x_diff = pot_blob[0] - blob[0]
+    pot_y_diff = pot_blob[1] - blob[1]
+
+    current_best_x_diff = current_best[0] - blob[0]
+    current_best_y_diff = current_best[1] - blob[1]
+    # If potential is at 12 then only not better if current best is too (which can't happen based on the game)
+    if pot_y_diff == 0 and pot_x_diff < 0:
+        return not (current_best_y_diff == 0 and current_best_x_diff < 0)
+    # If not at 12 then check if pot y is greater than zero (right of six o'clock) and current best is not)
+    elif pot_y_diff > 0 and current_best_x_diff < 0:
+        return True
+    elif pot_x_diff < 0:
+        # Both are right of six, check if pot x is less than current best x(closer to 3)
+        return pot_x_diff < current_best_x_diff
+    else:
+        # Both are left of six, check if post x is greater than current best x
+        return pot_x_diff > current_best_x_diff
 
 # Find smaller blobs and how far away they are from this blob
 def find_smaller_blobs(blob: Blob, other_blobs: List[Blob]) -> List[Tuple[Blob, int]]:

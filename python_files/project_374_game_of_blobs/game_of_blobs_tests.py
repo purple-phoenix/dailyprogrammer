@@ -77,8 +77,8 @@ class TestGameOfBlobs(unittest.TestCase):
     def test_get_largest_smaller_blobs(self):
         smaller_blobs = [((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]
         largest_smaller_blobs_and_distances = [((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]
-        self.assertEqual(largest_smaller_blobs_and_distances, get_largest_smaller_blobs(smaller_blobs))
-        self.assertEqual([], get_largest_smaller_blobs([]))
+        self.assertEqual(largest_smaller_blobs_and_distances, get_largest_blobs(smaller_blobs))
+        self.assertEqual([], get_largest_blobs([]))
 
     def test_blob_is_larger(self):
         self.assertTrue(blob_is_larger(((1, 2, 3), 4), ((1, 2, 2), 4)))
@@ -92,7 +92,7 @@ class TestGameOfBlobs(unittest.TestCase):
         smaller_blobs = [((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]
 
         closest_smaller_blobs = [((3, 5, 4), 1)]
-        self.assertEqual(closest_smaller_blobs, get_closest_smaller_blobs(smaller_blobs))
+        self.assertEqual(closest_smaller_blobs, get_closest_blobs(smaller_blobs))
 
     def test_blob_is_closer(self):
         self.assertTrue(blob_is_closer(((1, 2, 3), 1), ((2, 3, 4), 2)))
@@ -103,6 +103,45 @@ class TestGameOfBlobs(unittest.TestCase):
         self.assertTrue(blob_is_same_distance(((1, 2, 3), 1), ((2, 3, 4), 1)))
         self.assertFalse(blob_is_same_distance(((1, 2, 3), 1), ((2, 3, 4), 2)))
         self.assertFalse(blob_is_same_distance(((1, 2, 3), 2), ((2, 3, 4), 1)))
+
+    def test_clockwise_prioritization(self):
+        comparison_blob = (1, 1, 1)
+        twelve_o_clock = (0, 1, 1)
+        one_o_clock = (0, 2, 1)
+        six_o_clock = (2, 1, 1)
+        nine_o_clock = (1, 0, 1)
+        eleven_o_clock = (0, 0, 1)
+        eight_o_clock = (2, 0, 1)
+        blobs_to_move_towards = [eleven_o_clock,
+                                 one_o_clock,
+                                 eight_o_clock,
+                                 twelve_o_clock,
+                                 six_o_clock
+                                 ]
+        self.assertEqual(twelve_o_clock, clockwise_prioritization(comparison_blob, blobs_to_move_towards))
+        blobs_to_move_towards_2 = [eleven_o_clock,
+                                   one_o_clock,
+                                   eight_o_clock,
+                                   six_o_clock
+                                   ]
+        self.assertEqual(one_o_clock, clockwise_prioritization(comparison_blob, blobs_to_move_towards_2))
+        blobs_to_move_towards_3 = [six_o_clock, nine_o_clock]
+        self.assertEqual(six_o_clock, clockwise_prioritization(comparison_blob, blobs_to_move_towards_3))
+
+    def test_more_clockwise(self):
+        comparison_blob = (1, 1, 1)
+        twelve_o_clock = (0, 1, 1)
+        one_o_clock = (0, 2, 1)
+        six_o_clock = (2, 1, 1)
+        eight_o_clock = (2, 0, 1)
+        eleven_o_clock = (0, 0, 1)
+        five_o_clock = (2, 2, 1)
+        self.assertTrue(more_clockwise(comparison_blob, twelve_o_clock, one_o_clock))
+        self.assertTrue(more_clockwise(comparison_blob, one_o_clock, six_o_clock))
+        self.assertFalse(more_clockwise(comparison_blob, eight_o_clock, six_o_clock))
+        self.assertTrue(more_clockwise(comparison_blob, twelve_o_clock, eleven_o_clock))
+        self.assertTrue(more_clockwise(comparison_blob, five_o_clock, eleven_o_clock))
+        self.assertTrue(more_clockwise(comparison_blob, one_o_clock, five_o_clock))
 
 
 if __name__ == '__main__':
