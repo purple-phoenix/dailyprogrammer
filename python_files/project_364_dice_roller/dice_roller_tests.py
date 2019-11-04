@@ -14,9 +14,9 @@ class TestDiceRoller(unittest.TestCase):
 
     def test_dice_roll(self):
         dice_output = roll_dice(self.dice_input)
-        self.assertTrue(len(dice_output == len(self.dice_input)))
+        self.assertTrue(len(dice_output) == len(self.dice_input))
 
-        for die_input, index in enumerate(dice_output):
+        for index, die_input in enumerate(self.dice_input):
             num_dice = die_input[0]
             num_sides = die_input[1]
             output = dice_output[index]

@@ -1,5 +1,7 @@
 from typing import Tuple, List
-
+from random import randint
+from functools import reduce
+from operator import add
 
 # Number of die and number of sides per die
 DiceRoll = Tuple[int, int]
@@ -9,7 +11,14 @@ DiceInput = List[DiceRoll]
 
 
 def roll_dice(dice_input: DiceInput) -> List[int]:
-    pass
+    return list(map(roll_die, dice_input))
+
+
+def roll_die(dice_roll: DiceRoll) -> int:
+    num_dice = dice_roll[0]
+    num_sides = dice_roll[1]
+    list_of_die_values = num_dice * [randint(1, num_sides)]
+    return sum(list_of_die_values)
 
 
 def convert_input_str_to_dice_input(input_str: List[str]) -> DiceInput:
