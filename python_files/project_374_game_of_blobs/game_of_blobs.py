@@ -1,4 +1,4 @@
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Callable
 
 # Blobs are represented as a x position, y position and size
 # Positions are zero indexed, Blobs of size zero represented empty spaces
@@ -38,39 +38,85 @@ def remove_this_blob(blob: Blob, all_blobs: List[Blob]) -> List[Blob]:
 # Returns the moved blob. New blob is one unit closer to the largest blob. Ties going Clockwise
 def move_blob_toward_largest_smaller_blob(blob: Blob, other_blobs: List[Blob]) -> Blob:
     smaller_blobs_with_distances = find_smaller_blobs(blob, other_blobs)
+    closest_smaller_blobs = get_closest_smaller_blobs(smaller_blobs_with_distances)
 
 
-def get_largest_smaller_blobs(blob: Blob,
-                              smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
-
-    return get_largest_smaller_blobs_helper(blob, smaller_blobs_and_distances, [])
+def get_closest_smaller_blobs(smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Blob]:
+    return get_conditionest_blobs_helper(blob_is_closer, blob_is_same_distance, smaller_blobs_and_distances, [])
 
 
-def get_largest_smaller_blobs_helper(blob: Blob,
-                                     smaller_blobs_and_distances: List[Tuple[Blob, int]],
-                                     largest_blobs_so_far: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
-    if not smaller_blobs_and_distances:
-        return largest_blobs_so_far
+def blob_is_closer(blob_and_distance: Tuple[Blob, int], current_best: Tuple[Blob, int]) -> bool:
+    return blob_and_distance[1] < current_best[1]
+
+
+def blob_is_same_distance(blob_and_distance: Tuple[Blob, int], current_best: Tuple[Blob, int]) -> bool:
+    return blob_and_distance[1] == current_best[1]
+
+
+def get_largest_smaller_blobs(smaller_blobs_and_distances: List[Tuple[Blob, int]]) -> List[Tuple[Blob, int]]:
+
+    return get_conditionest_blobs_helper(blob_is_larger,
+                                         blob_is_same_size,
+                                         smaller_blobs_and_distances,
+                                         [])
+
+
+def blob_is_larger(blob_and_distance: Tuple[Blob, int], current_best: Tuple[Blob, int]) -> bool:
+    return blob_and_distance[0][2] > current_best[0][2]
+
+
+def blob_is_same_size(blob_and_distance: Tuple[Blob, int], current_best: Tuple[Blob, int]) -> bool:
+    return blob_and_distance[0][2] == current_best[0][2]
+
+
+# I admit this is not very Pythonic. But I didn't want to rewrite code once I discovered that the priority for movement
+# was for closeness before largeness. So instead I abstracted out the separate conditions and made a generic function
+# which both implementations would call. It's a bit obtuse, but technically more DRY. I'll leave comments
+# best I can
+def get_conditionest_blobs_helper(condition_for_replace: Callable[[Tuple[Blob, int], Tuple[Blob, int]], bool],
+                                  condition_for_extension: Callable[[Tuple[Blob, int], Tuple[Blob, int]], bool],
+                                  blobs_and_distances: List[Tuple[Blob, int]],
+                                  conditionest_blobs_so_far: List[Tuple[Blob, int]]
+                                  ) -> List[Tuple[Blob, int]]:
+    # Base case is simple. If there are no more blobs and distances to check then we return what we have so far
+    if not blobs_and_distances:
+        return conditionest_blobs_so_far
     else:
-        this_blob_and_distance = smaller_blobs_and_distances[0]
-        rest_of_blobs = smaller_blobs_and_distances[1:]
-        size_of_this_blob = this_blob_and_distance[0][2]
-        if not largest_blobs_so_far:
-            return get_largest_smaller_blobs_helper(blob, rest_of_blobs, [this_blob_and_distance])
+        this_blob_and_distance = blobs_and_distances[0]
+        rest_of_blobs = blobs_and_distances[1:]
+        # If we have not checked any blobs then we pass this one to start the accumulator
+        if not conditionest_blobs_so_far:
+            return get_conditionest_blobs_helper(condition_for_replace,
+                                                 condition_for_extension,
+                                                 rest_of_blobs,
+                                                 [this_blob_and_distance])
         else:
-            # Get first in list then get size. All entries in this list will have the same size based on elif
-            size_of_largest_blobs_so_far = largest_blobs_so_far[0][0][2]
-            if size_of_this_blob > size_of_largest_blobs_so_far:
-                return get_largest_smaller_blobs_helper(blob, rest_of_blobs, [this_blob_and_distance])
-            elif size_of_this_blob == size_of_largest_blobs_so_far:
-                return get_largest_smaller_blobs_helper(blob,
-                                                        rest_of_blobs,
-                                                        largest_blobs_so_far + [this_blob_and_distance])
+            # Get first in list then get size. All entries in this list will satisfy condition based on elif
+            # That is all entries in conditionest_blobs_so_far satisfy the condition_for_extension therefore
+            # we only need to check the first one against the abstract condition
+            blob_and_distance_to_check_against = conditionest_blobs_so_far[0]
+            if condition_for_replace(this_blob_and_distance, blob_and_distance_to_check_against):
+                # If this one satisfies the condition for replacement, then we start over on the accumulation
+                # If this one satisfies the condition for replacement, then we start over on the accumulation
+                return get_conditionest_blobs_helper(condition_for_replace,
+                                                     condition_for_extension,
+                                                     rest_of_blobs,
+                                                     [this_blob_and_distance])
+            elif condition_for_extension(this_blob_and_distance, blob_and_distance_to_check_against):
+                # Otherwise we check whether it satisfies the condition for extension, if so add to the accumulation
+                return get_conditionest_blobs_helper(condition_for_replace,
+                                                     condition_for_extension,
+                                                     rest_of_blobs,
+                                                     conditionest_blobs_so_far + [this_blob_and_distance])
             else:
-                return get_largest_smaller_blobs_helper(blob, rest_of_blobs, largest_blobs_so_far)
+                # Otherwise keep going with what we have so far through the rest of the unobserved list
+                return get_conditionest_blobs_helper(condition_for_replace,
+                                                     condition_for_extension,
+                                                     rest_of_blobs,
+                                                     conditionest_blobs_so_far)
 
 
-def clockwise_prioritization(blob: Blob, unit_directions_to_largest_blobs: List[Blob]) -> Blob:
+def clockwise_prioritization(blob: Blob, largest_: List[Blob]) -> Blob:
     pass
 
 

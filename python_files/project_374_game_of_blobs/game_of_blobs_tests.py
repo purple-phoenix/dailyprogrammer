@@ -75,11 +75,34 @@ class TestGameOfBlobs(unittest.TestCase):
         self.assertEqual(4, get_blob_distance((7, 9, 4), comparison_blob))
 
     def test_get_largest_smaller_blobs(self):
-        comparison_blob = (4, 5, 5)
         smaller_blobs = [((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]
         largest_smaller_blobs_and_distances = [((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]
-        self.assertEqual(largest_smaller_blobs_and_distances, get_largest_smaller_blobs(comparison_blob, smaller_blobs))
-        self.assertEqual([], get_largest_smaller_blobs(comparison_blob, []))
+        self.assertEqual(largest_smaller_blobs_and_distances, get_largest_smaller_blobs(smaller_blobs))
+        self.assertEqual([], get_largest_smaller_blobs([]))
+
+    def test_blob_is_larger(self):
+        self.assertTrue(blob_is_larger(((1, 2, 3), 4), ((1, 2, 2), 4)))
+        self.assertFalse(blob_is_larger(((1, 2, 3), 4), ((1, 2, 3), 3)))
+
+    def test_blob_is_same_size(self):
+        self.assertFalse(blob_is_same_size(((1, 2, 3), 4), ((1, 2, 2), 4)))
+        self.assertTrue(blob_is_same_size(((1, 2, 3), 4), ((1, 2, 3), 3)))
+
+    def test_get_closest_smaller_blobs(self):
+        smaller_blobs = [((1, 2, 3), 3), ((4, 8, 2), 3), ((7, 9, 4), 4), ((3, 5, 4), 1), ((2, 2, 4), 3)]
+
+        closest_smaller_blobs = [((3, 5, 4), 1)]
+        self.assertEqual(closest_smaller_blobs, get_closest_smaller_blobs(smaller_blobs))
+
+    def test_blob_is_closer(self):
+        self.assertTrue(blob_is_closer(((1, 2, 3), 1), ((2, 3, 4), 2)))
+        self.assertFalse(blob_is_closer(((1, 2, 3), 1), ((2, 3, 4), 1)))
+        self.assertFalse(blob_is_closer(((1, 2, 3), 2), ((2, 3, 4), 1)))
+
+    def test_blob_is_same_distance(self):
+        self.assertTrue(blob_is_same_distance(((1, 2, 3), 1), ((2, 3, 4), 1)))
+        self.assertFalse(blob_is_same_distance(((1, 2, 3), 1), ((2, 3, 4), 2)))
+        self.assertFalse(blob_is_same_distance(((1, 2, 3), 2), ((2, 3, 4), 1)))
 
 
 if __name__ == '__main__':
