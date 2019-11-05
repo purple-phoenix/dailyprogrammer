@@ -2,7 +2,16 @@ from typing import Dict, List
 
 
 def balanced(string: str) -> bool:
-    pass
+    char_dict = num_each_char(string)
+    x_in_dict = "x" in char_dict
+    y_in_dict = "y" in char_dict
+    if not x_in_dict or not y_in_dict:
+        # If either is missing, then they are balanced if both are missing
+        return not x_in_dict and not y_in_dict
+    else:
+        num_x = char_dict["x"]
+        num_y = char_dict["y"]
+        return num_x == num_y
 
 
 def balanced_bonus(string: str) -> bool:

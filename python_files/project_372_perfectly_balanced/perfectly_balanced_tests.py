@@ -3,6 +3,7 @@ from project_372_perfectly_balanced.perfectly_balanced import *
 
 
 class TestPerfectlyBalanced(unittest.TestCase):
+
     def test_balanced(self):
         self.assertTrue(balanced("xxxyyy"))
         self.assertTrue(balanced("yyyxxx"))
