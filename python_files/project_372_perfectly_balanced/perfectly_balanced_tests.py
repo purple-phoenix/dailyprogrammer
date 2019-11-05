@@ -23,6 +23,11 @@ class TestPerfectlyBalanced(unittest.TestCase):
         self.assertTrue(balanced_bonus("x"))
         self.assertTrue(balanced_bonus(""))
 
+    def test_num_each_char(self):
+        self.assertEqual({"a": 3, "b": 4, "y": 1}, num_each_char("abybbaba"))
+        self.assertEqual({}, num_each_char(""))
+        self.assertEqual({"a": 1}, num_each_char("a"))
+
 
 if __name__ == '__main__':
     unittest.main()
