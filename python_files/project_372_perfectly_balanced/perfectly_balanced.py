@@ -15,7 +15,33 @@ def balanced(string: str) -> bool:
 
 
 def balanced_bonus(string: str) -> bool:
-    pass
+    char_dict = num_each_char(string)
+    return all_chars_equal(char_dict)
+
+
+def all_chars_equal(char_dict: Dict[str, int]) -> bool:
+    return all_chars_equal_helper([val for val in char_dict.values()])
+
+
+def all_chars_equal_helper(char_nums: List[int]) -> bool:
+    if not char_nums:
+        return True
+    else:
+        first_num = char_nums[0]
+        rest_of_nums = char_nums[1:]
+        return nums_are_equal_to(rest_of_nums, first_num)
+
+
+def nums_are_equal_to(nums: List[int], num: int) -> bool:
+    if not nums:
+        return True
+    else:
+        next_num = nums[0]
+        if next_num != num:
+            return False
+        else:
+            rest_of_nums = nums[1:]
+            return nums_are_equal_to(rest_of_nums, num)
 
 
 def num_each_char(string: str) -> Dict[str, int]:

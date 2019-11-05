@@ -29,6 +29,16 @@ class TestPerfectlyBalanced(unittest.TestCase):
         self.assertEqual({}, num_each_char(""))
         self.assertEqual({"a": 1}, num_each_char("a"))
 
+    def test_all_chars_equal(self):
+        self.assertTrue(all_chars_equal({"a": 1, "b": 1, "c": 1}))
+        self.assertTrue(all_chars_equal({}))
+        self.assertFalse(all_chars_equal({"a": 1, "b": 1, "c": 3}))
+
+    def test_nums_are_equal_to(self):
+        self.assertTrue(nums_are_equal_to([1, 1, 1], 1))
+        self.assertFalse(nums_are_equal_to([1, 2, 1], 1))
+        self.assertTrue(nums_are_equal_to([], 1))
+
 
 if __name__ == '__main__':
     unittest.main()
