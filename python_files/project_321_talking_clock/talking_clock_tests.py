@@ -15,10 +15,10 @@ class TestTalkingClock(unittest.TestCase):
     def test_clock_time_to_english(self):
         self.assertEqual("It's twelve am", make_clock_statement((0, 0, 0, 0)))
         self.assertEqual("It's one thirty am", make_clock_statement((0, 1, 3, 0)))
-        self.assertEqual("It's twelve of five pm", make_clock_statement((1, 2, 0, 5)))
+        self.assertEqual("It's twelve oh five pm", make_clock_statement((1, 2, 0, 5)))
         self.assertEqual("It's two oh one pm", make_clock_statement((1, 4, 0, 1)))
-        self.assertEqual("It's two oh one pm", make_clock_statement((2, 0, 2, 9)))
-        self.assertEqual("It's nine pm", make_clock_statement((21, 0, 0, 0)))
+        self.assertEqual("It's eight twenty nine pm", make_clock_statement((2, 0, 2, 9)))
+        self.assertEqual("It's nine pm", make_clock_statement((2, 1, 0, 0)))
 
     def test_clock_num_to_str(self):
         self.assertEqual(" one ", clock_num_to_str(1, False))
@@ -26,7 +26,6 @@ class TestTalkingClock(unittest.TestCase):
         self.assertEqual(" five ", clock_num_to_str(5, False))
         self.assertEqual(" thirty ", clock_num_to_str(30, False))
         self.assertEqual(" oh ", clock_num_to_str(0, False))
-        self.assertEqual(" oh ", clock_num_to_str(0))
         self.assertEqual(" twelve ", clock_num_to_str(0, True))
 
 
