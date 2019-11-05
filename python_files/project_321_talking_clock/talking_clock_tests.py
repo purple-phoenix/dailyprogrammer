@@ -21,12 +21,12 @@ class TestTalkingClock(unittest.TestCase):
         self.assertEqual("It's nine pm", make_clock_statement((2, 1, 0, 0)))
 
     def test_clock_num_to_str(self):
-        self.assertEqual(" one ", clock_num_to_str(1, False))
-        self.assertEqual(" twenty ", clock_num_to_str(20, False))
-        self.assertEqual(" five ", clock_num_to_str(5, False))
-        self.assertEqual(" thirty ", clock_num_to_str(30, False))
-        self.assertEqual(" oh ", clock_num_to_str(0, False))
-        self.assertEqual(" twelve ", clock_num_to_str(0, True))
+        self.assertEqual("one", clock_num_to_str(1, False))
+        self.assertEqual("twenty", clock_num_to_str(20, False))
+        self.assertEqual("five", clock_num_to_str(5, False))
+        self.assertEqual("thirty", clock_num_to_str(30, False))
+        self.assertEqual("oh", clock_num_to_str(0, False))
+        self.assertEqual("twelve", clock_num_to_str(0, True))
 
 
 if __name__ == '__main__':
