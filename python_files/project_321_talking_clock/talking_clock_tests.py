@@ -10,7 +10,7 @@ class TestTalkingClock(unittest.TestCase):
         self.assertEqual((1, 2, 0, 5), make_clock_time("12:05"))
         self.assertEqual((1, 4, 0, 1), make_clock_time("14:01"))
         self.assertEqual((2, 0, 2, 9), make_clock_time("20:29"))
-        self.assertEqual((21, 0, 0, 0), make_clock_time("21:00"))
+        self.assertEqual((2, 1, 0, 0), make_clock_time("21:00"))
 
     def test_clock_time_to_english(self):
         self.assertEqual("It's twelve am", make_clock_statement(0, 0, 0, 0))
