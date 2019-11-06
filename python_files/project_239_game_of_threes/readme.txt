@@ -1,4 +1,5 @@
-Background
+
+https://www.reddit.com/r/dailyprogrammer/comments/3r7wxz/20151102_challenge_239_easy_a_game_of_threes/Background
 Back in middle school, I had a peculiar way of dealing with super boring classes. I would take my handy pocket
 calculator and play a "Game of Threes". Here's how you play it:
 
