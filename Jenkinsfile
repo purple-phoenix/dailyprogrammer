@@ -16,6 +16,8 @@ pipeline {
                 agent any
                     steps {
                         sh 'python3 python_files/test.py'
+                        junit 'results/*.xml'
+                        sh 'rm -rf results/*.xml'
                     }
                 }
 
@@ -28,12 +30,6 @@ pipeline {
             }
         }
 
-    }
-    post {
-        always {
-            junit 'results/*.xml'
-            deleteDir()
-        }
     }
 }
 
