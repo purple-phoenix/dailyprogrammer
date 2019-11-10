@@ -1,6 +1,5 @@
-use std::str::Chars;
 
-fn lang_to_rov(lang_str: &str) -> String {
+pub fn lang_to_rov(lang_str: &str) -> String {
     let mut accum = "".to_string();
     for a_char in lang_str.chars() {
         let next_rov_chars = lang_char_to_rov_chars(&a_char.to_string());
@@ -23,11 +22,31 @@ fn lang_char_to_rov_chars(lang_char: &String) -> String {
         new_chars.push_str(local_lang_char_copy.to_ascii_lowercase().as_str());
         return new_chars.clone();
     }
-    return String::new()
 }
 
-fn rov_to_eng(rov_str: &str) -> String {
-    return String::new();
+pub fn rov_to_lang(rov_str: &str) -> String {
+    let mut accum = "".to_string();
+    //When we find a consonant we need to add it to
+    //the accum and break twice
+    let mut no_op_counter = 0;
+    let num_no_ops_for_consonants = 2;
+
+    for a_char in rov_str.chars() {
+        let char_str = &a_char.to_string();
+        if 0  < no_op_counter && no_op_counter <= num_no_ops_for_consonants {
+            no_op_counter += 1;
+            continue;
+        }
+        else if is_swedish_vowel(char_str) || is_punctuation(char_str) {
+            accum.push_str(char_str.as_str());
+        }
+        else {
+            accum.push_str(char_str.as_str());
+            no_op_counter = 1; // Start no op_ops for next two characters
+        }
+    }
+
+    return accum
 }
 
 fn is_swedish_vowel(maybe_vowel: &String) -> bool {
@@ -100,14 +119,14 @@ mod tests {
 
         let rov1 = "Jojagog totalolaror Rorövovarorsospoproråkoketot!";
         let rov2 = "I'mom sospopeakokinongog Rorobobboberor'sos lolanongoguagoge!";
-        let rov3 = "Totrore Kokrorononoror äror vovärorloldodenons \
+        let rov3 = "Totrore Kokrorononoror äror vovärorloldodenonsos \
         bobäsostota isoshohocockokeylolagog.";
         let rov4 = "Vovåror kokunongog äror cocoololarore änon eror kokunongog.";
 
-        assert_eq!(rov_to_eng(rov1), lang1);
-        assert_eq!(rov_to_eng(rov2), lang2);
-        assert_eq!(rov_to_eng(rov3), lang3);
-        assert_eq!(rov_to_eng(rov4), lang4);
+        assert_eq!(rov_to_lang(rov1), lang1);
+        assert_eq!(rov_to_lang(rov2), lang2);
+        assert_eq!(rov_to_lang(rov3), lang3);
+        assert_eq!(rov_to_lang(rov4), lang4);
     }
 
     #[test]
