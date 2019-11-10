@@ -1,28 +1,19 @@
 use std::str::Chars;
 
 fn lang_to_rov(lang_str: &str) -> String {
-    return lang_to_rov_helper(&lang_str.to_string(), &String::new());
+    let mut accum = "".to_string();
+    for a_char in lang_str.chars() {
+        println!("Current accum {:?}", accum);
+        println!("Next char {:?} ", a_char);
+        let next_rov_chars = lang_char_to_rov_chars(&a_char.to_string());
+        println!("Processed {:?} to {:?}", a_char, next_rov_chars);
+        accum.push_str(next_rov_chars.as_str());
+        println!("Updated accum {:?}", accum);
+        println!("\n\n\n");
+    }
+    return accum;
 }
 
-fn lang_to_rov_helper(lang_str: &String, accum: &String) -> String {
-    if lang_str.is_empty() {
-        return accum.clone();
-    }
-    else {
-        println!("Current accum {:?}", accum);
-        let next_char = &lang_str[0..1].to_string();
-        println!("Next char {:?} ", next_char);
-        let rest_lang_chars = &lang_str[1..].to_string();
-        println!("Rest of chars {:?}", rest_lang_chars);
-        let next_rov_chars = lang_char_to_rov_chars(next_char);
-        println!("Processed {:?} to {:?}", next_char, next_rov_chars);
-        let mut updated_accum = accum.clone();
-        updated_accum.push_str(next_rov_chars.as_str());
-        println!("Updated accum {:?}", updated_accum);
-        println!("\n\n\n");
-        return lang_to_rov_helper(rest_lang_chars, &updated_accum);
-    }
-}
 
 fn lang_char_to_rov_chars(lang_char: &String) -> String {
     if is_swedish_vowel(lang_char) || is_punctuation(lang_char) {
@@ -94,7 +85,7 @@ mod tests {
         let rov1 = "Jojagog totalolaror Rorövovarorsospoproråkoketot!".to_string();
         let rov2 = "I'mom sospopeakokinongog Rorobobboberor'sos \
         lolanongoguagoge!".to_string();
-        let rov3 = "Totrore Kokrorononoror äror vovärorloldodenons \
+        let rov3 = "Totrore Kokrorononoror äror vovärorloldodenonsos \
         bobäsostota isoshohocockokeylolagog.".to_string();
         let rov4 = "Vovåror kokunongog äror cocoololarore änon eror kokunongog.".to_string();
 
