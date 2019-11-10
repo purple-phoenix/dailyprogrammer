@@ -26,6 +26,18 @@ fn rov_to_eng(rov_str: &str) -> String {
     return String::new();
 }
 
+fn is_swedish_vowel(maybe_vowel: &String) -> bool {
+    return maybe_vowel.eq_ignore_ascii_case("a")
+        || maybe_vowel.eq_ignore_ascii_case("e")
+        || maybe_vowel.eq_ignore_ascii_case("i")
+        || maybe_vowel.eq_ignore_ascii_case("o")
+        || maybe_vowel.eq_ignore_ascii_case("u")
+        || maybe_vowel.eq_ignore_ascii_case("y")
+        || maybe_vowel.eq_ignore_ascii_case("å")
+        || maybe_vowel.eq_ignore_ascii_case("ä")
+        || maybe_vowel.eq_ignore_ascii_case("ö")
+}
+
 
 
 #[cfg(test)]
@@ -80,5 +92,18 @@ mod tests {
         assert_eq!(rov_to_eng(rov2), lang2);
         assert_eq!(rov_to_eng(rov3), lang3);
         assert_eq!(rov_to_eng(rov4), lang4);
+    }
+
+    #[test]
+    fn test_is_swedish_vowel() {
+        assert!(is_swedish_vowel(&"a".to_string()));
+        assert!(is_swedish_vowel(&"e".to_string()));
+        assert!(is_swedish_vowel(&"i".to_string()));
+        assert!(is_swedish_vowel(&"o".to_string()));
+        assert!(is_swedish_vowel(&"u".to_string()));
+        assert!(is_swedish_vowel(&"y".to_string()));
+        assert!(is_swedish_vowel(&"å".to_string()));
+        assert!(is_swedish_vowel(&"ä".to_string()));
+        assert!(is_swedish_vowel(&"ö".to_string()));
     }
 }
