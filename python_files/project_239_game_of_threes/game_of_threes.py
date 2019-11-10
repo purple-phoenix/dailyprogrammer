@@ -10,6 +10,8 @@
 #  @param  operand:  number to operate on.
 #  @return boolean:  If inputs are valid.
 ##
+
+
 def game_of_threes(operand: int) -> bool:
     # Check for invalid inputs first
     if operand < 1:
