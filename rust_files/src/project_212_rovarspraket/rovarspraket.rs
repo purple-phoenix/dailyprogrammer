@@ -38,6 +38,13 @@ fn is_swedish_vowel(maybe_vowel: &String) -> bool {
         || maybe_vowel.eq_ignore_ascii_case("ö")
 }
 
+fn is_punctuation(maybe_punc: &String) -> bool {
+    return maybe_punc.eq_ignore_ascii_case(".")
+        || maybe_punc.eq_ignore_ascii_case(",")
+        || maybe_punc.eq_ignore_ascii_case("!")
+        || maybe_punc.eq_ignore_ascii_case("?")
+}
+
 
 
 #[cfg(test)]
@@ -105,5 +112,19 @@ mod tests {
         assert!(is_swedish_vowel(&"å".to_string()));
         assert!(is_swedish_vowel(&"ä".to_string()));
         assert!(is_swedish_vowel(&"ö".to_string()));
+
+        assert!(!is_swedish_vowel(&"p".to_string()));
+        assert!(!is_swedish_vowel(&".".to_string()));
+    }
+
+    #[test]
+    fn test_is_punctuation() {
+        assert!(is_punctuation(&"!".to_string()));
+        assert!(is_punctuation(&"?".to_string()));
+        assert!(is_punctuation(&".".to_string()));
+        assert!(is_punctuation(&",".to_string()));
+
+        assert!(!is_punctuation(&"p".to_string()));
+        assert!(!is_punctuation(&"a".to_string()));
     }
 }
