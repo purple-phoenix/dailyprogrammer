@@ -19,6 +19,18 @@ fn lang_to_rov_helper(lang_str: &String, accum: &String) -> String {
 }
 
 fn lang_char_to_rov_chars(lang_char: &String) -> String {
+    if is_swedish_vowel(lang_char) || is_punctuation(lang_char) {
+        return (*lang_char.clone()).parse().unwrap();
+    }
+    else {
+        // is consonant
+        let new_chars = &mut String::new();
+        let local_lang_char_copy = lang_char.clone();
+        new_chars.push_str(lang_char.as_str());
+        new_chars.push_str("o");
+        new_chars.push_str(local_lang_char_copy.to_ascii_lowercase().as_str());
+        return new_chars.clone();
+    }
     return String::new()
 }
 
@@ -55,11 +67,11 @@ mod tests {
     fn test_lang_char_to_rov_chars() {
         let lang_char1 = &"a".to_string();
         let lang_char2 = &"r".to_string();
-        let lang_char3 = &".!?".to_string();
+        let lang_char3 = &".".to_string();
 
         assert_eq!("a", lang_char_to_rov_chars(lang_char1));
         assert_eq!("ror", lang_char_to_rov_chars(lang_char2));
-        assert_eq!(".!?", lang_char_to_rov_chars(lang_char3));
+        assert_eq!(".", lang_char_to_rov_chars(lang_char3));
     }
 
     #[test]
