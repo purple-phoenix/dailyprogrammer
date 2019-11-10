@@ -9,11 +9,17 @@ fn lang_to_rov_helper(lang_str: &String, accum: &String) -> String {
         return accum.clone();
     }
     else {
-        let next_char = &lang_str[0..0].to_string();
+        println!("Current accum {:?}", accum);
+        let next_char = &lang_str[0..1].to_string();
+        println!("Next char {:?} ", next_char);
         let rest_lang_chars = &lang_str[1..].to_string();
+        println!("Rest of chars {:?}", rest_lang_chars);
         let next_rov_chars = lang_char_to_rov_chars(next_char);
+        println!("Processed {:?} to {:?}", next_char, next_rov_chars);
         let mut updated_accum = accum.clone();
         updated_accum.push_str(next_rov_chars.as_str());
+        println!("Updated accum {:?}", updated_accum);
+        println!("\n\n\n");
         return lang_to_rov_helper(rest_lang_chars, &updated_accum);
     }
 }
@@ -55,6 +61,7 @@ fn is_punctuation(maybe_punc: &String) -> bool {
         || maybe_punc.eq_ignore_ascii_case(",")
         || maybe_punc.eq_ignore_ascii_case("!")
         || maybe_punc.eq_ignore_ascii_case("?")
+        || maybe_punc.eq_ignore_ascii_case(" ")
 }
 
 
@@ -68,10 +75,12 @@ mod tests {
         let lang_char1 = &"a".to_string();
         let lang_char2 = &"r".to_string();
         let lang_char3 = &".".to_string();
+        let space = &" ".to_string();
 
         assert_eq!("a", lang_char_to_rov_chars(lang_char1));
         assert_eq!("ror", lang_char_to_rov_chars(lang_char2));
         assert_eq!(".", lang_char_to_rov_chars(lang_char3));
+        assert_eq!(" ", lang_char_to_rov_chars(space));
     }
 
     #[test]
@@ -92,6 +101,7 @@ mod tests {
         assert_eq!(lang_to_rov(lang2), rov2);
         assert_eq!(lang_to_rov(lang3), rov3);
         assert_eq!(lang_to_rov(lang4), rov4);
+
     }
 
     #[test]
@@ -135,6 +145,7 @@ mod tests {
         assert!(is_punctuation(&"?".to_string()));
         assert!(is_punctuation(&".".to_string()));
         assert!(is_punctuation(&",".to_string()));
+        assert!(is_punctuation(&" ".to_string()));
 
         assert!(!is_punctuation(&"p".to_string()));
         assert!(!is_punctuation(&"a".to_string()));
