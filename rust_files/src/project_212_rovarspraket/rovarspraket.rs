@@ -62,6 +62,7 @@ fn is_punctuation(maybe_punc: &String) -> bool {
         || maybe_punc.eq_ignore_ascii_case("!")
         || maybe_punc.eq_ignore_ascii_case("?")
         || maybe_punc.eq_ignore_ascii_case(" ")
+        || maybe_punc.eq_ignore_ascii_case("'")
 }
 
 
@@ -146,6 +147,7 @@ mod tests {
         assert!(is_punctuation(&".".to_string()));
         assert!(is_punctuation(&",".to_string()));
         assert!(is_punctuation(&" ".to_string()));
+        assert!(is_punctuation(&"'".to_string()));
 
         assert!(!is_punctuation(&"p".to_string()));
         assert!(!is_punctuation(&"a".to_string()));
