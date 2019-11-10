@@ -3,13 +3,8 @@ use std::str::Chars;
 fn lang_to_rov(lang_str: &str) -> String {
     let mut accum = "".to_string();
     for a_char in lang_str.chars() {
-        println!("Current accum {:?}", accum);
-        println!("Next char {:?} ", a_char);
         let next_rov_chars = lang_char_to_rov_chars(&a_char.to_string());
-        println!("Processed {:?} to {:?}", a_char, next_rov_chars);
         accum.push_str(next_rov_chars.as_str());
-        println!("Updated accum {:?}", accum);
-        println!("\n\n\n");
     }
     return accum;
 }
