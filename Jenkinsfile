@@ -9,15 +9,20 @@ pipeline {
                 sh 'python3 -m pip install --user -r python_files/requirements.txt'
             }
         }
-        stage('Python Unit Tests') {
-            steps {
-                sh 'python3 python_files/test.py'
-            }
-        }
+        parallel {
 
-        stage('Build and Test Rust') {
-            dir('rust_files') {
-                sh 'cargo test'
+            stage('Python Unit Tests') {
+            agent any
+                steps {
+                    sh 'python3 python_files/test.py'
+                }
+            }
+
+            stage('Build and Test Rust') {
+            agent any
+                steps {
+                    sh 'cargo test --manifest-path=rust_files/Cargo.toml'
+                }
             }
         }
     }
