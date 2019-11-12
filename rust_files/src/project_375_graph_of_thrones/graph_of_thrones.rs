@@ -5,12 +5,12 @@ use std::hash::Hash;
 pub struct UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
     num_nodes: usize,
     num_edges: usize,
-    graph: HashMap<T, Vec<T>>
+    graph: HashMap<T, Vec<(T, bool)>>
 }
 
 
 
-impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
+impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy {
     pub fn is_balanced(&self) -> bool {
         if self.is_simple_graph() {
             return false;
@@ -25,20 +25,25 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
         }
     }
 
-    pub fn make_graph(graph: HashMap<T, Vec<T>>) -> UndirectedCompleteGraph<T> {
+    pub fn make_graph(graph: &HashMap<T, Vec<(T, bool)>>) -> UndirectedCompleteGraph<T> {
         let mut num_nodes = 0;
         let mut num_edges = 0;
         let mut seen_edges = Vec::with_capacity(graph.len() * 2);
-        for (node, edges) in &graph {
+        let mut graph_clone = HashMap::new();
+        for (node, edges) in graph {
+            let mut new_edges = vec![];
             for edge in edges {
-                if !(seen_edges.contains(&(node, edge)) || seen_edges.contains(&(edge, node))) {
+                if !(seen_edges.contains(&(node, edge)) ||
+                    seen_edges.contains(&(&edge.0, &(*node, edge.1)))) {
                     num_edges += 1;
                     seen_edges.push((node, edge));
+                    new_edges.push(edge.clone())
                 }
             }
+            graph_clone.insert(node.clone(), new_edges.clone());
             num_nodes += 1;
         }
-        return UndirectedCompleteGraph {num_nodes, num_edges, graph}
+        return UndirectedCompleteGraph {num_nodes, num_edges, graph: graph_clone}
     }
 
     pub fn get_num_nodes(&self) -> usize {
@@ -71,11 +76,11 @@ mod tests {
         let node2 = "Node2";
         let node3 = "Node3";
         let mut simple_graph = HashMap::new();
-        simple_graph.insert(node1, vec![node2, node3]);
-        simple_graph.insert(node2, vec![node1, node3]);
-        simple_graph.insert(node3, vec![node1, node2]);
+        simple_graph.insert(node1, vec![(node2, true), (node3, false)]);
+        simple_graph.insert(node2, vec![(node1, true), (node3, false)]);
+        simple_graph.insert(node3, vec![(node1, false), (node2, false)]);
         let actual_graph =
-            UndirectedCompleteGraph::make_graph(simple_graph);
+            UndirectedCompleteGraph::make_graph(&simple_graph);
 
         assert_eq!(actual_graph.get_num_edges(), 3)
 
@@ -83,8 +88,29 @@ mod tests {
 
     #[test]
     fn test_is_balanced() {
-        let simple_graph = 1;
+        let node1 = "Node1";
+        let node2 = "Node2";
+        let node3 = "Node3";
+        let mut simple_graph = HashMap::new();
+        simple_graph.insert(node1, vec![(node2, true), (node3, false)]);
+        simple_graph.insert(node2, vec![(node1, true), (node3, false)]);
+        simple_graph.insert(node3, vec![(node1, false), (node2, false)]);
+        let actual_graph =
+            UndirectedCompleteGraph::make_graph(&simple_graph);
 
+        assert!(actual_graph.is_balanced());
+
+        let node4 = "Node4";
+
+        let mut unbalanced_graph = HashMap::new();
+        unbalanced_graph.insert(node1, vec![(node2, false), (node3, false), (node4, false)]);
+        unbalanced_graph.insert(node2, vec![(node3, true), (node4, true)]);
+        unbalanced_graph.insert(node3, vec![(node4, false)]);
+        unbalanced_graph.insert(node4, vec![]);
+        let unbalanced_graph_struct =
+            UndirectedCompleteGraph::make_graph(&unbalanced_graph);
+
+        assert!(!unbalanced_graph_struct.is_balanced());
 
     }
 
