@@ -1,4 +1,5 @@
 mod project_212_rovarspraket;
+mod project_381_yahtzee;
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 
 pub fn qualify_rovarspraket(some_str: &str) -> bool {
