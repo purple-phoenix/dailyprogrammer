@@ -11,8 +11,18 @@ pub struct UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
 
 
 impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
-    pub fn is_balanced() -> bool {
-        return false
+    pub fn is_balanced(&self) -> bool {
+        if self.is_simple_graph() {
+            return false;
+        }
+        else {
+            let sub_graphs = self.make_sub_graphs();
+            let mut all_sub_graphs_are_balanced = true;
+            for a_sub_graph in sub_graphs {
+                all_sub_graphs_are_balanced &= a_sub_graph.is_balanced();
+            }
+            return all_sub_graphs_are_balanced;
+        }
     }
 
     pub fn make_graph(graph: HashMap<T, Vec<T>>) -> UndirectedCompleteGraph<T> {
@@ -37,6 +47,14 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
 
     pub fn get_num_edges(&self) -> usize {
         return self.num_edges;
+    }
+
+    fn is_simple_graph(&self) -> bool {
+        return false;
+    }
+
+    fn make_sub_graphs(&self) -> Vec<UndirectedCompleteGraph<T>> {
+        return vec![]
     }
 }
 
