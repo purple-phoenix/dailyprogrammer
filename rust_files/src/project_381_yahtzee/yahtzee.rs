@@ -1,7 +1,7 @@
 use std::hash::Hash;
 use std::collections::HashMap;
 
-fn yahtzee_upper(dice_roll: Vec<usize>) -> usize {
+pub fn yahtzee_upper(dice_roll: Vec<usize>) -> usize {
     let occurrences = count_nums_x_to_y(dice_roll);
     let mut current_best = 0; //Some result will be better than 0
     for occurrence in occurrences {
@@ -16,6 +16,7 @@ fn yahtzee_upper(dice_roll: Vec<usize>) -> usize {
 }
 
 // Counts the occurrences of each number one to six storing the value indexed at the number - 1
+#[deprecated(note = "Please use count_nums_x_to_y")]
 fn count_nums_one_to_six(five_dice_roll: Vec<usize>) -> Vec<usize> {
     let num_values = 6; // 1-6 inclusive
     // Initialize the count of each number 1-6 to zero
