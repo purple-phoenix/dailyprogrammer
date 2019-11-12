@@ -1,4 +1,3 @@
-use std::hash::Hash;
 use std::collections::HashMap;
 
 pub fn yahtzee_upper(dice_roll: Vec<usize>) -> usize {
@@ -15,30 +14,12 @@ pub fn yahtzee_upper(dice_roll: Vec<usize>) -> usize {
     return current_best;
 }
 
-// Counts the occurrences of each number one to six storing the value indexed at the number - 1
-#[deprecated(note = "Please use count_nums_x_to_y")]
-fn count_nums_one_to_six(five_dice_roll: Vec<usize>) -> Vec<usize> {
-    let num_values = 6; // 1-6 inclusive
-    // Initialize the count of each number 1-6 to zero
-    let mut occurrences = vec![0; num_values];
-    for a_roll_value in five_dice_roll {
-        let value_index = a_roll_value - 1;
-        let previous_count = occurrences.get(value_index).unwrap();
-        occurrences[value_index] = previous_count + 1;
-    }
-    return occurrences;
-}
 
 fn count_nums_x_to_y(dice_roll: Vec<(usize)>) -> HashMap<usize, usize>{
     let mut occurrences: HashMap<usize, usize> = HashMap::new();
     for a_roll_value in dice_roll {
-        if occurrences.contains_key(&a_roll_value){
-            let previous_count = occurrences.get(&a_roll_value).unwrap();
-            occurrences.insert(a_roll_value, previous_count + 1);
-        }
-        else {
-            occurrences.insert(a_roll_value, 1);
-        }
+        // If entry exists increment, else initialize with zero and increment to one
+        *occurrences.entry(a_roll_value).or_insert(0) += 1;
     }
     return occurrences;
 }
@@ -59,13 +40,6 @@ mod tests {
                                       30864, 4868, 30864]),
                    123456
                                       )
-    }
-
-    #[test]
-    fn test_count_nums_one_to_six() {
-        assert_eq!(count_nums_one_to_six(vec![2, 3, 5, 5, 6]), vec![0, 1, 1, 0, 2, 1]);
-        assert_eq!(count_nums_one_to_six(vec![1, 1, 1, 1, 3]), vec![4, 0, 1, 0, 0, 0]);
-        assert_eq!(count_nums_one_to_six(vec![1, 1, 1, 3, 3]), vec![3, 0, 2, 0, 0, 0]);
     }
 
     #[test]
