@@ -1,5 +1,6 @@
 mod project_212_rovarspraket;
 mod project_381_yahtzee;
+mod project_375_graph_of_thrones;
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 use crate::project_381_yahtzee::yahtzee::yahtzee_upper;
 
