@@ -1,12 +1,13 @@
 use std::hash::Hash;
 use std::collections::HashMap;
 
-fn yahtzee_upper(five_dice_roll: Vec<usize>) -> usize {
-    let occurrences = count_nums_one_to_six(five_dice_roll);
+fn yahtzee_upper(dice_roll: Vec<usize>) -> usize {
+    let occurrences = count_nums_x_to_y(dice_roll);
     let mut current_best = 0; //Some result will be better than 0
-    for (i, occurrence) in occurrences.iter().enumerate() {
-        let num_value = i + 1;
-        let score = num_value * *occurrence;
+    for occurrence in occurrences {
+        let die_value = occurrence.0;
+        let num_times = occurrence.1;
+        let score = die_value * num_times;
         if score > current_best {
             current_best = score;
         }
@@ -52,6 +53,11 @@ mod tests {
         assert_eq!(yahtzee_upper(vec![1, 1, 1, 3, 3]), 6);
         assert_eq!(yahtzee_upper(vec![1, 2, 3, 4, 5]), 5);
         assert_eq!(yahtzee_upper(vec![6, 6, 6, 6, 6]), 30);
+        assert_eq!(yahtzee_upper(vec![1654, 1654, 50995, 30864, 1654, 50995, 22747,
+                                      1654, 1654, 1654, 1654, 1654, 30864, 4868, 1654, 4868, 1654,
+                                      30864, 4868, 30864]),
+                   123456
+                                      )
     }
 
     #[test]
