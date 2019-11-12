@@ -55,7 +55,7 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy {
     }
 
     fn is_simple_graph(&self) -> bool {
-        return false;
+        return self.num_nodes == 3;
     }
 
     fn make_sub_graphs(&self) -> Vec<UndirectedCompleteGraph<T>> {
@@ -111,6 +111,34 @@ mod tests {
             UndirectedCompleteGraph::make_graph(&unbalanced_graph);
 
         assert!(!unbalanced_graph_struct.is_balanced());
+
+    }
+
+    #[test]
+    fn test_is_simple_graph() {
+        let node1 = "Node1";
+        let node2 = "Node2";
+        let node3 = "Node3";
+        let mut simple_graph = HashMap::new();
+        simple_graph.insert(node1, vec![(node2, true), (node3, false)]);
+        simple_graph.insert(node2, vec![(node1, true), (node3, false)]);
+        simple_graph.insert(node3, vec![(node1, false), (node2, false)]);
+        let actual_graph =
+            UndirectedCompleteGraph::make_graph(&simple_graph);
+
+        assert!(actual_graph.is_simple_graph());
+
+        let node4 = "Node4";
+
+        let mut unbalanced_graph = HashMap::new();
+        unbalanced_graph.insert(node1, vec![(node2, false), (node3, false), (node4, false)]);
+        unbalanced_graph.insert(node2, vec![(node3, true), (node4, true)]);
+        unbalanced_graph.insert(node3, vec![(node4, false)]);
+        unbalanced_graph.insert(node4, vec![]);
+        let unbalanced_graph_struct =
+            UndirectedCompleteGraph::make_graph(&unbalanced_graph);
+
+        assert!(!unbalanced_graph_struct.is_simple_graph());
 
     }
 
