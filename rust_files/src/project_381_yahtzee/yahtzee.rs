@@ -1,6 +1,15 @@
 
 fn yahtzee_upper(five_dice_roll: Vec<usize>) -> usize {
-    return 0;
+    let occurrences = count_nums_one_to_six(five_dice_roll);
+    let mut current_best = 0; //Some result will be better than 0
+    for (i, occurrence) in occurrences.iter().enumerate() {
+        let num_value = i + 1;
+        let score = num_value * *occurrence;
+        if score > current_best {
+            current_best = score;
+        }
+    }
+    return current_best;
 }
 
 // Counts the occurrences of each number one to six storing the value indexed at the number - 1
