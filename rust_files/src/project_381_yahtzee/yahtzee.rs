@@ -1,3 +1,5 @@
+use std::hash::Hash;
+use std::collections::HashMap;
 
 fn yahtzee_upper(five_dice_roll: Vec<usize>) -> usize {
     let occurrences = count_nums_one_to_six(five_dice_roll);
@@ -25,11 +27,24 @@ fn count_nums_one_to_six(five_dice_roll: Vec<usize>) -> Vec<usize> {
     return occurrences;
 }
 
+fn count_nums_x_to_y(dice_roll: Vec<(usize)>) -> HashMap<usize, usize>{
+    let mut occurrences: HashMap<usize, usize> = HashMap::new();
+    for a_roll_value in dice_roll {
+        if occurrences.contains_key(&a_roll_value){
+            let previous_count = occurrences.get(&a_roll_value).unwrap();
+            occurrences.insert(a_roll_value, previous_count + 1);
+        }
+        else {
+            occurrences.insert(a_roll_value, 1);
+        }
+    }
+    return occurrences;
+}
 
 #[cfg(test)]
 mod tests {
-    use crate::project_381_yahtzee::yahtzee::{yahtzee_upper, count_nums_one_to_six};
-
+    use super::*;
+    use std::collections::HashMap;
     #[test]
     fn test_yahtzee_upper() {
         assert_eq!(yahtzee_upper(vec![2, 3, 5, 5, 6]), 10);
@@ -44,5 +59,23 @@ mod tests {
         assert_eq!(count_nums_one_to_six(vec![2, 3, 5, 5, 6]), vec![0, 1, 1, 0, 2, 1]);
         assert_eq!(count_nums_one_to_six(vec![1, 1, 1, 1, 3]), vec![4, 0, 1, 0, 0, 0]);
         assert_eq!(count_nums_one_to_six(vec![1, 1, 1, 3, 3]), vec![3, 0, 2, 0, 0, 0]);
+    }
+
+    #[test]
+    fn test_count_nums_x_to_y() {
+        let mut map1 = HashMap::new();
+        map1.insert(2, 1);
+        map1.insert(3, 1);
+        map1.insert(5, 2);
+        map1.insert(6, 1);
+        assert_eq!(count_nums_x_to_y(vec![2, 3, 5, 5, 6]), map1);
+        let mut map2 = HashMap::new();
+        map2.insert(1, 4);
+        map2.insert(3, 1);
+        assert_eq!(count_nums_x_to_y(vec![1, 1, 1, 1, 3]), map2);
+        let mut map3 = HashMap::new();
+        map3.insert(1, 3);
+        map3.insert(3, 2);
+        assert_eq!(count_nums_x_to_y(vec![1, 1, 1, 3, 3]), map3);
     }
 }
