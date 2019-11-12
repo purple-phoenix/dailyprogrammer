@@ -3,6 +3,9 @@ mod project_381_yahtzee;
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 use crate::project_381_yahtzee::yahtzee::yahtzee_upper;
 
+use std::fs::File;
+use std::io::{BufReader, BufRead};
+
 
 pub fn qualify_rovarspraket(some_str: &str) -> bool {
     let rov = lang_to_rov(some_str);
@@ -11,11 +14,18 @@ pub fn qualify_rovarspraket(some_str: &str) -> bool {
 }
 
 pub fn qualify_yahtzee() -> bool {
-    let complex_dice_roll = vec![1654, 1654, 50995, 30864, 1654, 50995, 22747,
-                                 1654, 1654, 1654, 1654, 1654, 30864, 4868, 1654, 4868, 1654,
-                                 30864, 4868, 30864];
+    let path = "src/project_381_yahtzee/yahtzee-upper-1.txt";
+    let input = File::open(path).unwrap();
+    let buffered = BufReader::new(input);
 
-    return 123456 == yahtzee_upper(complex_dice_roll)
+    let mut complex_dice_roll: Vec<usize> = Vec::with_capacity(100000);
+
+    for line in buffered.lines() {
+        complex_dice_roll.push(line.unwrap().parse::<usize>().unwrap())
+    }
+
+
+    return 31415926535 == yahtzee_upper(complex_dice_roll)
 }
 
 #[cfg(test)]
