@@ -14,13 +14,18 @@ pub struct UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
 impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Debug {
     pub fn is_balanced(&self) -> bool {
         if self.is_simple_graph() {
-            return false;
+            let mut num_falses = 0;
+            for (node, edges) in self.get_graph() {
+                for an_edge in edges {
+                    if !an_edge.1 {
+                        num_falses += 1;
+                    }
+                }
+            }
+            return num_falses % 2 == 0;
         }
         else {
             let sub_graphs = self.make_sub_graphs();
-            for subgraph in &sub_graphs {
-                println!("\n{:?}\n", subgraph);
-            }
             let mut all_sub_graphs_are_balanced = true;
             for a_sub_graph in sub_graphs {
                 all_sub_graphs_are_balanced &= a_sub_graph.is_balanced();
@@ -346,6 +351,9 @@ mod tests {
 
         assert!(actual_graph.is_balanced());
 
+        println!("--------------------------------------------------------------------------------");
+
+
         let node4 = "Node4";
 
         let mut unbalanced_graph = HashMap::new();
@@ -410,7 +418,6 @@ mod tests {
         let sub_graph = sub_graphs.get(0).unwrap().get_graph();
         assert!(maps_are_equal(&before_graph, &sub_graph));
 
-        println!("--------------------------------------------------------------------------------");
 
         let mut unbalanced_graph = HashMap::new();
         unbalanced_graph.insert(node1, vec![(node2, false), (node3, false), (node4, false)]);
