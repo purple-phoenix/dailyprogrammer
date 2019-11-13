@@ -300,12 +300,76 @@ fn copy_map<T, E>(map: &HashMap<T, E>) -> HashMap<T, E> where T: Hash + Clone + 
     return new_map;
 }
 
+fn make_graph_from_lines(lines: Vec<&str>) -> UndirectedCompleteGraph<&str> {
+    let num_nodes = 0;
+    let num_edges = 0;
+    let mut graph: HashMap<&str, Vec<(&str, bool)>> = HashMap::new();
+    for line in lines[1..].to_vec() {
+        println!("{}", line);
+        if line.starts_with("%d %d") {
+            continue;
+        }
+        let node_and_edge = convert_line_to_graph_input(line);
+        let node = node_and_edge.0;
+        let edge = node_and_edge.1;
+        let maybe_current_list = graph.get_mut(node);
+        match maybe_current_list {
+            Some(list) => {
+                list.push(edge);
+            }
+            None => {
+                graph.insert(node, vec![edge]);
+            }
+        }
+    }
+    let mut nodes: Vec<&str>= vec![];
+    for (node, edges) in &graph {
+        for edge in edges {
+            let edge_node = edge.0;
+            if !nodes.contains(&edge_node) {
+                nodes.push(edge_node);
+            }
+        }
+    }
+
+    for node in nodes {
+        if !graph.contains_key(node) {
+            graph.insert(node, vec![]);
+        }
+    }
+
+    for (node, edges) in &graph {
+        println!("{}   {:?}", node, edges);
+    }
+    return UndirectedCompleteGraph{
+        num_nodes,
+        num_edges,
+        graph
+    }
+}
+
+fn convert_line_to_graph_input(line: &str) -> (&str, (&str, bool)) {
+    let pos_sep = " ++ ";
+    if line.contains(pos_sep) {
+        let node_edge_node_list: Vec<&str> = line.split(pos_sep).collect();
+        let node = node_edge_node_list[0];
+        let edge_node = node_edge_node_list[1];
+        return (node, (edge_node, true))
+    }
+    else {
+        let node_edge_node_list: Vec<&str> = line.split(" -- ").collect();
+        let node = node_edge_node_list[0];
+        let edge_node = node_edge_node_list[1];
+        return (node, (edge_node, false))
+    }
+}
+
 
 
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use crate::project_375_graph_of_thrones::graph_of_thrones::{UndirectedCompleteGraph, maps_are_equal, graph_contains_map};
+    use crate::project_375_graph_of_thrones::graph_of_thrones::{UndirectedCompleteGraph, maps_are_equal, graph_contains_map, make_graph_from_lines, convert_line_to_graph_input};
 
     #[test]
     fn test_make_graph() {
@@ -455,5 +519,79 @@ mod tests {
         assert!(graph_contains_map(&list_of_graph2, &graph4));
 
     }
+
+    #[test]
+    fn test_make_graph_from_lines() {
+        let lines = vec![
+            "6 15",
+            "Superman ++ Green Lantern",
+            "Superman ++ Wonder Woman",
+            "Superman -- Sinestro",
+            "Superman -- Cheetah",
+            "Superman -- Lex Luthor",
+            "Green Lantern ++ Wonder Woman",
+            "Green Lantern -- Sinestro",
+            "Green Lantern -- Cheetah",
+            "Green Lantern -- Lex Luthor",
+            "Wonder Woman -- Sinestro",
+            "Wonder Woman -- Cheetah",
+            "Wonder Woman -- Lex Luthor",
+            "Sinestro ++ Cheetah",
+            "Sinestro ++ Lex Luthor",
+            "Cheetah ++ Lex Luthor"
+        ];
+
+        let superman= "Superman";
+        let green_lantern = "Green Lantern";
+        let sinestro = "Sinestro";
+        let cheetah = "Cheetah";
+        let lex_luthor = "Lex Luthor";
+        let wonder_woman = "Wonder Woman";
+
+        let mut graph = HashMap::with_capacity(6);
+        graph.insert(superman, vec![
+            (green_lantern, true),
+            (wonder_woman, true),
+            (sinestro, false),
+            (cheetah, false),
+            (lex_luthor, false)
+        ]);
+        graph.insert(green_lantern, vec![
+            (wonder_woman, true),
+            (sinestro, false),
+            (cheetah, false),
+            (lex_luthor, false)
+        ]);
+        graph.insert(wonder_woman, vec![
+            (sinestro, false),
+            (cheetah, false),
+            (lex_luthor, false)
+        ]);
+        graph.insert(sinestro, vec![
+            (cheetah, true),
+            (lex_luthor, true)
+        ]);
+        graph.insert(cheetah, vec![
+            (lex_luthor, true)
+        ]);
+        graph.insert(lex_luthor, vec![]);
+
+        let undirected_graph = make_graph_from_lines(lines);
+        assert!(maps_are_equal(&graph, &undirected_graph.get_graph()));
+
+
+    }
+
+    #[test]
+    fn test_convert_line_to_graph_input() {
+        assert_eq!(convert_line_to_graph_input("Superman ++ Green Lantern"),
+                   ("Superman", ("Green Lantern", true)));
+        assert_eq!(convert_line_to_graph_input("Wonder Woman -- Lex Luthor"),
+                   ("Wonder Woman", ("Lex Luthor", false))
+        );
+    }
+
+
+
 
 }
