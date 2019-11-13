@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::fmt::Debug;
 
 #[derive(Debug)]
 pub struct UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
@@ -10,13 +11,16 @@ pub struct UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd{
 
 
 
-impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy {
+impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Debug {
     pub fn is_balanced(&self) -> bool {
         if self.is_simple_graph() {
             return false;
         }
         else {
             let sub_graphs = self.make_sub_graphs();
+            for subgraph in &sub_graphs {
+                println!("\n{:?}\n", subgraph);
+            }
             let mut all_sub_graphs_are_balanced = true;
             for a_sub_graph in sub_graphs {
                 all_sub_graphs_are_balanced &= a_sub_graph.is_balanced();
@@ -74,8 +78,205 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy {
         if self.is_simple_graph() {
             return vec![self.copy_graph()]
         }
-        return vec![]
+
+
+        let mut known_edges: HashMap<(T, T), bool> = HashMap::with_capacity(self.num_edges);
+        for (node, edges) in &self.graph {
+            for edge in edges {
+                known_edges.insert((node.clone(), edge.0.clone()), edge.1);
+            }
+        }
+
+        let mut sub_graphs = vec![];
+
+
+        for known_edge in &known_edges {
+            let first_node = (known_edge.0).0;
+            let second_node = (known_edge.0).1;
+            let first_second_edge = *known_edge.1;
+            for maybe_third_edge in copy_map(&known_edges) {
+                let maybe_third_edge_node_1 = (maybe_third_edge.0).0;
+                let maybe_third_edge_node_2 = (maybe_third_edge.0).1;
+                if (first_node == maybe_third_edge_node_1 || second_node == maybe_third_edge_node_1)
+                    && maybe_third_edge_node_2 != first_node && maybe_third_edge_node_2 != second_node {
+                    //Maybe third edge 2 is unique
+                    if *(&known_edges.contains_key(&(first_node, maybe_third_edge_node_2))){
+                        let maybe_third_edge =
+                            *known_edges.get(&(first_node, maybe_third_edge_node_2)).unwrap();
+
+                        if *(&known_edges.contains_key(&(second_node, maybe_third_edge_node_2))) {
+                            let final_edge = *known_edges.get(&(second_node, maybe_third_edge_node_2)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_2, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_2, final_edge)]);
+                            graph.insert(maybe_third_edge_node_2, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                println!("PUSHING");
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
+                        }
+                        else if *(&known_edges.contains_key(&(maybe_third_edge_node_2, second_node))) {
+                            let final_edge = known_edges.get(&(maybe_third_edge_node_2, second_node)).unwrap();
+                        }
+
+
+
+                    }else if *(&known_edges.contains_key(&(maybe_third_edge_node_2, first_node))) {
+                        let maybe_third_edge =
+                            *known_edges.get(&(maybe_third_edge_node_2, first_node)).unwrap();
+
+                        if *(&known_edges.contains_key(&(second_node, maybe_third_edge_node_2))) {
+                            let final_edge = *known_edges.get(&(second_node, maybe_third_edge_node_2)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_2, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_2, final_edge)]);
+                            graph.insert(maybe_third_edge_node_2, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                println!("PUSHING");
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
+                        }
+                        else if *(&known_edges.contains_key(&(maybe_third_edge_node_2, second_node))) {
+                            let final_edge = known_edges.get(&(maybe_third_edge_node_2, second_node)).unwrap();
+                        }
+
+
+                    }
+                }
+                else if (first_node == maybe_third_edge_node_2 || second_node == maybe_third_edge_node_2)
+                    && maybe_third_edge_node_1 != first_node && maybe_third_edge_node_1 != second_node{
+                    //Maybe third edge 1 is unique
+                    if *(&known_edges.contains_key(&(first_node, maybe_third_edge_node_1))){
+                        let maybe_third_edge =
+                            *known_edges.get(&(first_node, maybe_third_edge_node_1)).unwrap();
+
+                        if *(&known_edges.contains_key(&(second_node, maybe_third_edge_node_1))) {
+                            let final_edge = *known_edges.get(&(second_node, maybe_third_edge_node_1)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_1, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
+                            graph.insert(maybe_third_edge_node_1, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                println!("PUSHING");
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
+
+                        }
+                        else if *(&known_edges.contains_key(&(maybe_third_edge_node_1, second_node))) {
+                            let final_edge = *known_edges.get(&(maybe_third_edge_node_1, second_node)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_1, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
+                            graph.insert(maybe_third_edge_node_1, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                println!("PUSHING");
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
+                        }
+
+
+
+                    }else if *(&known_edges.contains_key(&(maybe_third_edge_node_1, first_node))) {
+                        let maybe_third_edge =
+                            *known_edges.get(&(maybe_third_edge_node_1, first_node)).unwrap();
+
+                        if *(&known_edges.contains_key(&(second_node, maybe_third_edge_node_1))) {
+                            let final_edge = *known_edges.get(&(second_node, maybe_third_edge_node_1)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_1, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
+                            graph.insert(maybe_third_edge_node_1, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                println!("PUSHING");
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
+
+                        }
+                        else if *(&known_edges.contains_key(&(maybe_third_edge_node_1, second_node))) {
+                            let final_edge = *known_edges.get(&(maybe_third_edge_node_1, second_node)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_1, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
+                            graph.insert(maybe_third_edge_node_1, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                println!("PUSHING");
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
+
+                        }
+
+
+
+
+                    }
+                }
+            }
+        }
+
+        for subgraph in &sub_graphs {
+            println!("\n{:?}\n", subgraph);
+            println!("{}", &sub_graphs.len())
+        }
+
+        return sub_graphs;
+        }
+
+
+
     }
+
+fn graph_contains_map<T>(graphs: &Vec<UndirectedCompleteGraph<T>>, map: &HashMap<T, Vec<(T, bool)>>)  -> bool
+    where T: PartialOrd + Eq + Hash + Debug + Copy {
+    if graphs.is_empty() {
+        return false;
+    }
+    let mut maps = vec![];
+    let mut no_maps_equal = true;
+    for graph in graphs {
+        maps.push(graph.get_graph());
+    }
+
+    for a_map in maps {
+        no_maps_equal &= !maps_contain_same_elms(&a_map, map)
+    }
+    //println!("\n\nList {:?} \n\n Map {:?}\n\n {}", graphs, map, no_maps_equal);
+    return !no_maps_equal
+}
+
+
+fn maps_contain_same_elms<T>(map1: &HashMap<T, Vec<(T, bool)>>, map2: &HashMap<T, Vec<(T, bool)>>) -> bool
+    where T: Eq + Hash + Clone + Copy + Debug {
+    let mut same_elms = true;
+    let mut reference_dictionary_1 = HashMap::new();
+    let mut reference_dictionary_2 = HashMap::new();
+    let mut nodes1 = vec![];
+    let mut nodes2 = vec![];
+    for (node, edges) in copy_map(map1) {
+        nodes1.push(node.clone());
+        for edge in edges {
+            let edge_node = edge.0;
+            *reference_dictionary_1.entry(edge_node.clone()).or_insert(0) += 1;
+        }
+    }
+
+    for (node, edges) in copy_map(map2) {
+        nodes2.push(node.clone());
+        for edge in edges {
+            let edge_node = edge.0;
+            let edge_node_clone = edge_node.clone();
+            *reference_dictionary_2.entry(edge_node_clone).or_insert(0) += 1;
+        }
+    }
+
+    let mut same_nodes = true;
+    for a_node in nodes1 {
+        same_nodes &= nodes2.contains(&a_node);
+    }
+
+    //println!("Reference Dict1 {:?}.....\nReference Dict2 {:?}", reference_dictionary_1, reference_dictionary_2);
+    let references_equal = maps_are_equal(&reference_dictionary_1, &reference_dictionary_2);
+    //println!("References are equal {}", references_equal);
+    return references_equal || same_nodes;
 }
 
 
@@ -113,7 +314,7 @@ fn copy_map<T, E>(map: &HashMap<T, E>) -> HashMap<T, E> where T: Hash + Clone + 
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use crate::project_375_graph_of_thrones::graph_of_thrones::{UndirectedCompleteGraph, maps_are_equal};
+    use crate::project_375_graph_of_thrones::graph_of_thrones::{UndirectedCompleteGraph, maps_are_equal, graph_contains_map};
 
     #[test]
     fn test_make_graph() {
@@ -207,10 +408,9 @@ mod tests {
         assert_eq!(sub_graphs.len(), 1);
         let before_graph = actual_graph.get_graph();
         let sub_graph = sub_graphs.get(0).unwrap().get_graph();
-        println!("{:?}...{:?}", before_graph, sub_graph);
         assert!(maps_are_equal(&before_graph, &sub_graph));
 
-
+        println!("--------------------------------------------------------------------------------");
 
         let mut unbalanced_graph = HashMap::new();
         unbalanced_graph.insert(node1, vec![(node2, false), (node3, false), (node4, false)]);
@@ -221,6 +421,47 @@ mod tests {
             UndirectedCompleteGraph::make_graph(&unbalanced_graph);
 
         let sub_graphs = unbalanced_graph_struct.make_sub_graphs();
+
+        assert_eq!(sub_graphs.len(), 4);
+
+    }
+
+    #[test]
+    fn test_graph_contains_map() {
+        let node1 = "Node1";
+        let node3 = "Node3";
+        let node2 = "Node2";
+        let node4 = "Node4";
+        let mut graph1 = HashMap::new();
+        graph1.insert(node3, vec![(node4, false)]);
+        graph1.insert(node1, vec![(node4, false), (node3, false)]);
+        graph1.insert(node4, vec![]);
+        let mut graph2 = HashMap::new();
+        graph2.insert(node2, vec![]);
+        graph2.insert(node3, vec![(node2, false)]);
+        graph2.insert(node1, vec![(node2, false), (node3, false)]);
+
+        let graph1_struct
+            = UndirectedCompleteGraph::make_graph(&graph1);
+
+        let list_of_graph
+            = vec![UndirectedCompleteGraph::make_graph(&graph1)];
+
+        assert!(graph_contains_map(&list_of_graph, &graph1));
+
+        let mut graph3 = HashMap::new();
+        graph3.insert(node3, vec![]);
+        graph3.insert(node4, vec![(node3, false)]);
+        graph3.insert(node1, vec![(node3, false), (node4, false)]);
+
+        let mut graph4 = HashMap::new();
+        graph4.insert(node4, vec![]);
+        graph4.insert(node1, vec![(node4, false), (node3, false)]);
+        graph4.insert(node3, vec![(node4, false)]);
+
+        let list_of_graph2 =
+            vec![UndirectedCompleteGraph::make_graph(&graph3)];
+        assert!(graph_contains_map(&list_of_graph2, &graph4));
 
     }
 
