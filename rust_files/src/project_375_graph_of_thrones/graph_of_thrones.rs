@@ -116,7 +116,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             graph.insert(second_node, vec![(maybe_third_edge_node_2, final_edge)]);
                             graph.insert(maybe_third_edge_node_2, vec![]);
                             if !graph_contains_map(&sub_graphs, &graph) {
-                                println!("PUSHING");
                                 sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
                             }
                         }
@@ -137,7 +136,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             graph.insert(second_node, vec![(maybe_third_edge_node_2, final_edge)]);
                             graph.insert(maybe_third_edge_node_2, vec![]);
                             if !graph_contains_map(&sub_graphs, &graph) {
-                                println!("PUSHING");
                                 sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
                             }
                         }
@@ -162,7 +160,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
                             graph.insert(maybe_third_edge_node_1, vec![]);
                             if !graph_contains_map(&sub_graphs, &graph) {
-                                println!("PUSHING");
                                 sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
                             }
 
@@ -174,7 +171,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
                             graph.insert(maybe_third_edge_node_1, vec![]);
                             if !graph_contains_map(&sub_graphs, &graph) {
-                                println!("PUSHING");
                                 sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
                             }
                         }
@@ -192,7 +188,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
                             graph.insert(maybe_third_edge_node_1, vec![]);
                             if !graph_contains_map(&sub_graphs, &graph) {
-                                println!("PUSHING");
                                 sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
                             }
 
@@ -204,7 +199,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             graph.insert(second_node, vec![(maybe_third_edge_node_1, final_edge)]);
                             graph.insert(maybe_third_edge_node_1, vec![]);
                             if !graph_contains_map(&sub_graphs, &graph) {
-                                println!("PUSHING");
                                 sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
                             }
 
@@ -216,11 +210,6 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                     }
                 }
             }
-        }
-
-        for subgraph in &sub_graphs {
-            println!("\n{:?}\n", subgraph);
-            println!("{}", &sub_graphs.len())
         }
 
         return sub_graphs;
@@ -244,7 +233,6 @@ fn graph_contains_map<T>(graphs: &Vec<UndirectedCompleteGraph<T>>, map: &HashMap
     for a_map in maps {
         no_maps_equal &= !maps_contain_same_elms(&a_map, map)
     }
-    //println!("\n\nList {:?} \n\n Map {:?}\n\n {}", graphs, map, no_maps_equal);
     return !no_maps_equal
 }
 
@@ -278,9 +266,7 @@ fn maps_contain_same_elms<T>(map1: &HashMap<T, Vec<(T, bool)>>, map2: &HashMap<T
         same_nodes &= nodes2.contains(&a_node);
     }
 
-    //println!("Reference Dict1 {:?}.....\nReference Dict2 {:?}", reference_dictionary_1, reference_dictionary_2);
     let references_equal = maps_are_equal(&reference_dictionary_1, &reference_dictionary_2);
-    //println!("References are equal {}", references_equal);
     return references_equal || same_nodes;
 }
 
@@ -350,8 +336,6 @@ mod tests {
             UndirectedCompleteGraph::make_graph(&simple_graph);
 
         assert!(actual_graph.is_balanced());
-
-        println!("--------------------------------------------------------------------------------");
 
 
         let node4 = "Node4";
