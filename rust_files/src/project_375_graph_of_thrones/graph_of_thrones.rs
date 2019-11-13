@@ -300,7 +300,12 @@ fn copy_map<T, E>(map: &HashMap<T, E>) -> HashMap<T, E> where T: Hash + Clone + 
     return new_map;
 }
 
-fn make_graph_from_lines(lines: Vec<&str>) -> UndirectedCompleteGraph<&str> {
+pub fn make_graph_from_lines<T: AsRef<str>>(lines_gen: &[T]) -> UndirectedCompleteGraph<&str> {
+
+    let mut lines = Vec::with_capacity(lines_gen.len());
+    for gen_line in lines_gen {
+        lines.push(gen_line.as_ref());
+    }
     let num_nodes = 0;
     let num_edges = 0;
     let mut graph: HashMap<&str, Vec<(&str, bool)>> = HashMap::new();
@@ -573,7 +578,7 @@ mod tests {
         ]);
         graph.insert(lex_luthor, vec![]);
 
-        let undirected_graph = make_graph_from_lines(lines);
+        let undirected_graph = make_graph_from_lines(&lines);
         assert!(maps_are_equal(&graph, &undirected_graph.get_graph()));
 
 

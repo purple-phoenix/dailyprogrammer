@@ -3,6 +3,7 @@ mod project_381_yahtzee;
 mod project_375_graph_of_thrones;
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 use crate::project_381_yahtzee::yahtzee::yahtzee_upper;
+use crate::project_375_graph_of_thrones::graph_of_thrones::{make_graph_from_lines, UndirectedCompleteGraph};
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
@@ -29,6 +30,22 @@ pub fn qualify_yahtzee() -> bool {
     return 31415926535 == yahtzee_upper(complex_dice_roll)
 }
 
+pub fn qualify_graph_of_thrones() -> bool {
+    let path = "src/project_375_graph_of_thrones/graph_of_thrones.txt";
+    let input = File::open(path).unwrap();
+    let buffered = BufReader::new(input);
+
+    let mut line_vec = Vec::with_capacity(121);
+
+    for buf_line in buffered.lines() {
+        let buf_line_to_string = buf_line.unwrap();
+        line_vec.push(buf_line_to_string);
+    }
+
+    let graph = make_graph_from_lines(&line_vec);
+    return !graph.is_balanced();
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -42,6 +59,11 @@ mod tests {
     #[test]
     fn test_qualify_yahtzee() {
         assert!(qualify_yahtzee())
+    }
+
+    #[test]
+    fn test_qualify_graph_of_thrones() {
+        assert!(qualify_graph_of_thrones())
     }
 
 }
