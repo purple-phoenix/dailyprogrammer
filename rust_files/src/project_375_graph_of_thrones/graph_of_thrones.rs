@@ -337,10 +337,7 @@ fn make_graph_from_lines(lines: Vec<&str>) -> UndirectedCompleteGraph<&str> {
             graph.insert(node, vec![]);
         }
     }
-
-    for (node, edges) in &graph {
-        println!("{}   {:?}", node, edges);
-    }
+    
     return UndirectedCompleteGraph{
         num_nodes,
         num_edges,
