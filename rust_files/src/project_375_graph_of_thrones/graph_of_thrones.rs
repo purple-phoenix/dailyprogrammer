@@ -15,7 +15,7 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
     pub fn is_balanced(&self) -> bool {
         if self.is_simple_graph() {
             let mut num_falses = 0;
-            for (node, edges) in self.get_graph() {
+            for (_node, edges) in self.get_graph() {
                 for an_edge in edges {
                     if !an_edge.1 {
                         num_falses += 1;
@@ -54,11 +54,7 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
         }
         return UndirectedCompleteGraph {num_nodes, num_edges, graph: graph_clone}
     }
-
-    pub fn get_num_nodes(&self) -> usize {
-        return self.num_nodes;
-    }
-
+    #[allow(dead_code)]
     pub fn get_num_edges(&self) -> usize {
         return self.num_edges;
     }
@@ -120,7 +116,14 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             }
                         }
                         else if *(&known_edges.contains_key(&(maybe_third_edge_node_2, second_node))) {
-                            let final_edge = known_edges.get(&(maybe_third_edge_node_2, second_node)).unwrap();
+                            let final_edge = *known_edges.get(&(maybe_third_edge_node_2, second_node)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_2, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_2, final_edge)]);
+                            graph.insert(maybe_third_edge_node_2, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
                         }
 
 
@@ -140,7 +143,14 @@ impl <T> UndirectedCompleteGraph<T> where T: Eq + Hash + PartialOrd + Copy + Deb
                             }
                         }
                         else if *(&known_edges.contains_key(&(maybe_third_edge_node_2, second_node))) {
-                            let final_edge = known_edges.get(&(maybe_third_edge_node_2, second_node)).unwrap();
+                            let final_edge = *known_edges.get(&(maybe_third_edge_node_2, second_node)).unwrap();
+                            let mut graph = HashMap::with_capacity(3);
+                            graph.insert(first_node, vec![(maybe_third_edge_node_2, maybe_third_edge), (second_node, first_second_edge)]);
+                            graph.insert(second_node, vec![(maybe_third_edge_node_2, final_edge)]);
+                            graph.insert(maybe_third_edge_node_2, vec![]);
+                            if !graph_contains_map(&sub_graphs, &graph) {
+                                sub_graphs.push(UndirectedCompleteGraph::make_graph(&graph));
+                            }
                         }
 
 
@@ -239,7 +249,6 @@ fn graph_contains_map<T>(graphs: &Vec<UndirectedCompleteGraph<T>>, map: &HashMap
 
 fn maps_contain_same_elms<T>(map1: &HashMap<T, Vec<(T, bool)>>, map2: &HashMap<T, Vec<(T, bool)>>) -> bool
     where T: Eq + Hash + Clone + Copy + Debug {
-    let mut same_elms = true;
     let mut reference_dictionary_1 = HashMap::new();
     let mut reference_dictionary_2 = HashMap::new();
     let mut nodes1 = vec![];
@@ -328,7 +337,7 @@ pub fn make_graph_from_lines<T: AsRef<str>>(lines_gen: &[T]) -> UndirectedComple
         }
     }
     let mut nodes: Vec<&str>= vec![];
-    for (node, edges) in &graph {
+    for (_node, edges) in &graph {
         for edge in edges {
             let edge_node = edge.0;
             if !nodes.contains(&edge_node) {
@@ -498,8 +507,6 @@ mod tests {
         graph2.insert(node3, vec![(node2, false)]);
         graph2.insert(node1, vec![(node2, false), (node3, false)]);
 
-        let graph1_struct
-            = UndirectedCompleteGraph::make_graph(&graph1);
 
         let list_of_graph
             = vec![UndirectedCompleteGraph::make_graph(&graph1)];

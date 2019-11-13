@@ -3,7 +3,7 @@ mod project_381_yahtzee;
 mod project_375_graph_of_thrones;
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 use crate::project_381_yahtzee::yahtzee::yahtzee_upper;
-use crate::project_375_graph_of_thrones::graph_of_thrones::{make_graph_from_lines, UndirectedCompleteGraph};
+use crate::project_375_graph_of_thrones::graph_of_thrones::{make_graph_from_lines};
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
