@@ -8,9 +8,7 @@ pub struct AVLTree<T> {
 
 }
 
-impl <T> AVLTree<T>
-where T: Sized
-{
+impl <T> AVLTree<T> {
 
     pub fn make_empty_tree(data: T) -> AVLTree<T> {
         return AVLTree {
