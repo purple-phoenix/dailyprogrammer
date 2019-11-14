@@ -25,7 +25,7 @@ where T: PartialOrd
         return self.height;
     }
 
-    pub fn insert(self, new_node_value: T) -> AVLTree<T> {
+    pub fn insert_bst(self, new_node_value: T) -> AVLTree<T> {
         if new_node_value > self.data {
             match self.right_child {
                 None => return AVLTree {
@@ -38,7 +38,7 @@ where T: PartialOrd
                 Some(right_child) => return AVLTree {
                         data: self.data,
                         left_child: self.left_child,
-                        right_child: Some(Box::new(right_child.insert(new_node_value))),
+                        right_child: Some(Box::new(right_child.insert_bst(new_node_value))),
                         height: self.height + 1
                 }
             }
@@ -55,13 +55,25 @@ where T: PartialOrd
                 Some(left_child) => {
                     return AVLTree {
                         data: self.data,
-                        left_child: Some(Box::new(left_child.insert(new_node_value))),
+                        left_child: Some(Box::new(left_child.insert_bst(new_node_value))),
                         right_child: self.right_child,
                         height: self.height + 1
                     }
                 }
             }
         }
+    }
+
+    fn is_avl_unbalanced(&self) -> bool {
+        return false
+    }
+
+    fn is_leaf(&self) -> bool {
+        return false;
+    }
+
+    fn left_rotate(&self, data:T) -> AVLTree<T> {
+        return AVLTree::make_empty_tree(data);
     }
 
 }
@@ -93,14 +105,14 @@ mod test {
     #[test]
     fn test_insert() {
         let base_tree = AVLTree::make_empty_tree(10);
-        let insert_to_right = base_tree.insert(15);
+        let insert_to_right = base_tree.insert_bst(15);
         assert_eq!(insert_to_right, AVLTree {
             data: 10,
             left_child: None,
             right_child: Some(Box::new(AVLTree::make_empty_tree(15))),
             height: 1
         });
-        let insert_left_then_right = insert_to_right.insert(13);
+        let insert_left_then_right = insert_to_right.insert_bst(13);
         assert_eq!(insert_left_then_right, AVLTree {
             data: 10,
             left_child: None,
@@ -111,7 +123,48 @@ mod test {
                 height: 1
             })),
             height: 2
-        })
+        });
+    }
+
+    #[test]
+    fn test_is_avl_unbalanced() {
+        let base_tree = AVLTree::make_empty_tree(10);
+        let insert_to_right = base_tree.insert_bst(15);
+        let insert_left_then_right = insert_to_right.insert_bst(13);
+
+        assert!(insert_left_then_right.is_avl_unbalanced());
+    }
+
+    #[test]
+    fn test_is_leaf() {
+        let base_tree = AVLTree::make_empty_tree(10);
+        assert!(base_tree.is_leaf());
+        let insert_to_right = base_tree.insert_bst(15);
+        assert!(!insert_to_right.is_leaf());
+        
+    }
+    #[test]
+    fn test_rotate_left() {
+        let base_tree = AVLTree::make_empty_tree(10);
+        let tree = base_tree.insert_bst(15);
+        let tree = tree.insert_bst(13);
+        let tree = tree.insert_bst(16);
+        let tree = tree.insert_bst(7);
+        let tree = tree.insert_bst(8);
+        let tree = tree.insert_bst(3);
+
+        let rotated_left_tree = tree.left_rotate(10);
+        let expected_rotate_left = AVLTree::make_empty_tree(15);
+        let expected_rotate_left = expected_rotate_left.insert_bst(10);
+        let expected_rotate_left = expected_rotate_left.insert_bst(16);
+        let expected_rotate_left = expected_rotate_left.insert_bst(13);
+        let expected_rotate_left = expected_rotate_left.insert_bst(7);
+        let expected_rotate_left = expected_rotate_left.insert_bst(3);
+        let expected_rotate_left = expected_rotate_left.insert_bst(8);
+        assert_eq!(rotated_left_tree, expected_rotate_left);
+
+
+
     }
 
 }
