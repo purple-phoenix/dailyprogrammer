@@ -452,4 +452,28 @@ mod test {
         assert_eq!(get_height_of_avl_tree(&Some(Box::new(tree))), 1);
     }
 
+    #[test]
+    fn test_insert_avl() {
+        let tree = AVLTree::make_empty_tree(15);
+        let tree = tree.insert_avl(17);
+        let tree = tree.insert_avl(20);
+
+        assert_eq!(tree, AVLTree {
+            data: 17,
+            left_child: Some(Box::new(AVLTree {
+                data: 15,
+                left_child: None,
+                right_child: None,
+                height: 0
+            })),
+            right_child: Some(Box::new(AVLTree {
+                data: 20,
+                left_child: None,
+                right_child: None,
+                height:0
+            })),
+            height: 1
+        });
+    }
+
 }
