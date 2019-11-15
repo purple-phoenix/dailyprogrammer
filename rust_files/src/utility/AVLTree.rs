@@ -1,3 +1,5 @@
+use std::cmp::max;
+
 
 #[derive(Debug, PartialEq)]
 pub struct AVLTree<T> {
@@ -8,8 +10,10 @@ pub struct AVLTree<T> {
 
 }
 
+
+
 impl <T> AVLTree<T>
-where T: PartialOrd
+where T: PartialOrd + Copy
 {
 
     pub fn make_empty_tree(data: T) -> AVLTree<T> {
@@ -21,48 +25,60 @@ where T: PartialOrd
         };
     }
 
-    pub fn get_height(self) -> isize {
-        return self.height;
+    pub fn get_height(&self) -> isize {
+        return 1 + max(get_height_of_avl_tree(&self.left_child),
+                       get_height_of_avl_tree(&self.right_child));
     }
 
     pub fn insert_bst(self, new_node_value: T) -> AVLTree<T> {
         if new_node_value > self.data {
             match self.right_child {
-                None => return AVLTree {
-                    data: self.data,
-                    left_child: self.left_child,
-                    right_child: Some(Box::new(
-                        AVLTree::make_empty_tree(new_node_value))),
-                    height: self.height + 1
+                None => {
+                 let new_tree = AVLTree {
+                     data: self.data,
+                     left_child: self.left_child,
+                     right_child: Some(Box::new(
+                         AVLTree::make_empty_tree(new_node_value))),
+                     height: self.height + 1
+                 };
+                    return new_tree.update_height();
                 },
-                Some(right_child) => return AVLTree {
+                Some(right_child) => {
+                    let new_tree = AVLTree {
                         data: self.data,
                         left_child: self.left_child,
                         right_child: Some(Box::new(right_child.insert_bst(new_node_value))),
                         height: self.height + 1
+                    };
+                    return new_tree.update_height();
                 }
             }
         }
         else {
             match self.left_child {
-                None => return AVLTree {
-                    data: self.data,
-                    left_child: Some(Box::new(
-                        AVLTree::make_empty_tree(new_node_value))),
-                    right_child: self.right_child,
-                    height: self.height + 1
+                None => {
+                    let new_tree = AVLTree {
+                        data: self.data,
+                        left_child: Some(Box::new(
+                            AVLTree::make_empty_tree(new_node_value))),
+                        right_child: self.right_child,
+                        height: self.height + 1
+                    };
+                    return new_tree.update_height();
                 },
                 Some(left_child) => {
-                    return AVLTree {
+                    let new_tree = AVLTree {
                         data: self.data,
                         left_child: Some(Box::new(left_child.insert_bst(new_node_value))),
                         right_child: self.right_child,
                         height: self.height + 1
-                    }
+                    };
+                    return new_tree.update_height();
                 }
             }
         }
     }
+
 
     fn is_avl_unbalanced(&self) -> bool {
         return false
@@ -72,12 +88,148 @@ where T: PartialOrd
         return false;
     }
 
-    fn left_rotate(&self, data:T) -> AVLTree<T> {
-        return AVLTree::make_empty_tree(data);
+    fn update_height(self) -> AVLTree<T> {
+        let new_height = self.get_height();
+        return AVLTree {
+            data: self.data,
+            left_child: self.left_child,
+            right_child: self.right_child,
+            height: new_height
+        }
+    }
+
+    fn update_height_left_child(self) -> AVLTree<T> {
+        match self.left_child {
+            None => return self,
+            Some(left_child) => {
+                let updated_left_child = left_child.update_height();
+                let updated_node = AVLTree {
+                    data: self.data,
+                    left_child: Some(Box::new(updated_left_child)),
+                    right_child: self.right_child,
+                    height: self.height
+                };
+                return updated_node.update_height();
+            }
+        }
+    }
+
+    fn update_height_right_child(self) -> AVLTree<T> {
+        match self.right_child {
+            None => return self,
+            Some(right_child) => {
+                let updated_right_child = right_child.update_height();
+                let updated_node = AVLTree {
+                    data: self.data,
+                    left_child: self.left_child,
+                    right_child: Some(Box::new(updated_right_child)),
+                    height: self.height
+                };
+                return updated_node.update_height();
+            }
+        }
+    }
+
+    fn update_height_children(self) -> AVLTree<T> {
+        let updated_left_child = self.update_height_left_child();
+        return updated_left_child.update_height_right_child();
+    }
+
+
+
+    fn left_rotate(self, data:T) -> AVLTree<T> {
+        if data > self.data {
+            match self.right_child {
+                None => {
+                    let new_tree = AVLTree {
+                        data: self.data,
+                        left_child: self.left_child,
+                        right_child: Some(Box::new(
+                            AVLTree::make_empty_tree(data))),
+                        height: self.height
+                    };
+                    return new_tree.update_height();
+                },
+                Some(right_child) => {
+                    let new_tree = AVLTree {
+                        data: self.data,
+                        left_child: self.left_child,
+                        right_child: Some(Box::new(right_child.left_rotate(data))),
+                        height: self.height
+                    };
+                    return new_tree.update_height();
+                }
+            }
+        }
+        else if data < self.data {
+            match self.left_child {
+                None => {
+                    let new_tree = AVLTree {
+                        data: self.data,
+                        left_child: Some(Box::new(
+                            AVLTree::make_empty_tree(data))),
+                        right_child: self.right_child,
+                        height: self.height
+                    };
+                    return new_tree.update_height();
+                },
+                Some(left_child) => {
+                    let new_tree = AVLTree {
+                        data: self.data,
+                        left_child: Some(Box::new(left_child.left_rotate(data))),
+                        right_child: self.right_child,
+                        height: self.height
+                    };
+                    return new_tree.update_height();
+                }
+            }
+        }
+        else {
+            // We are at the node to left rotate
+            match self.right_child {
+                None => {
+                    // We cannot replace the root with the right child if it does not exist
+                    return self
+                }
+                Some(right_child) => {
+                    let new_root_data = right_child.data;
+                    let new_right_tree = right_child.right_child;
+                    // Increment new_right_tree's height by one
+                    let new_right_tree = match new_right_tree {
+                        None => None,
+                        Some(new_right_tree) =>{
+                            Some(Box::new(new_right_tree.update_height_children().update_height()))
+                        }
+
+                    };
+                    let new_left_child = AVLTree {
+                        data: self.data,
+                        left_child: self.left_child,
+                        right_child: right_child.left_child,
+                        height: self.height // Updated by update_height_children
+                    }.update_height_children().update_height();
+
+                    let new_tree = AVLTree {
+                        data: new_root_data,
+                        left_child: Some(Box::new(new_left_child)),
+                        right_child: new_right_tree,
+                        height: self.height
+                    };
+                    return new_tree.update_height();
+                }
+            }
+        }
     }
 
 }
 
+
+fn get_height_of_avl_tree<T>(maybe_tree: &Option<Box<AVLTree<T>>>) -> isize {
+    match maybe_tree {
+        None => -1,
+        Some(avl_tree) => avl_tree.height
+    }
+}
 
 
 #[cfg(test)]
@@ -141,7 +293,7 @@ mod test {
         assert!(base_tree.is_leaf());
         let insert_to_right = base_tree.insert_bst(15);
         assert!(!insert_to_right.is_leaf());
-        
+
     }
     #[test]
     fn test_rotate_left() {
@@ -155,16 +307,23 @@ mod test {
 
         let rotated_left_tree = tree.left_rotate(10);
         let expected_rotate_left = AVLTree::make_empty_tree(15);
-        let expected_rotate_left = expected_rotate_left.insert_bst(10);
-        let expected_rotate_left = expected_rotate_left.insert_bst(16);
-        let expected_rotate_left = expected_rotate_left.insert_bst(13);
-        let expected_rotate_left = expected_rotate_left.insert_bst(7);
-        let expected_rotate_left = expected_rotate_left.insert_bst(3);
-        let expected_rotate_left = expected_rotate_left.insert_bst(8);
+        let expected_rotate_left = expected_rotate_left.insert_bst(10).update_height();
+        let expected_rotate_left = expected_rotate_left.insert_bst(16).update_height();
+        let expected_rotate_left = expected_rotate_left.insert_bst(13).update_height();
+        let expected_rotate_left = expected_rotate_left.insert_bst(7).update_height();
+        let expected_rotate_left = expected_rotate_left.insert_bst(3).update_height();
+        let expected_rotate_left = expected_rotate_left.insert_bst(8).update_height();
         assert_eq!(rotated_left_tree, expected_rotate_left);
 
+    }
 
-
+    #[test]
+    fn test_get_height_of_avl_tree() {
+        let base_tree = AVLTree::make_empty_tree(10);
+        assert_eq!(get_height_of_avl_tree(&Some(Box::new(AVLTree::make_empty_tree(10)))), 0);
+        let tree = base_tree.insert_bst(15);
+        assert_eq!(get_height_of_avl_tree::<i32>(&None), -1);
+        assert_eq!(get_height_of_avl_tree(&Some(Box::new(tree))), 1);
     }
 
 }
