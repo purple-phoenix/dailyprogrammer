@@ -1,4 +1,5 @@
 use std::cmp::max;
+use std::fmt::Debug;
 
 
 #[derive(Debug, PartialEq)]
@@ -13,7 +14,7 @@ pub struct AVLTree<T> {
 
 
 impl <T> AVLTree<T>
-where T: PartialOrd + Copy
+where T: PartialOrd + Copy + Debug
 {
 
     pub fn make_empty_tree(data: T) -> AVLTree<T> {
@@ -81,12 +82,14 @@ where T: PartialOrd + Copy
 
 
     fn is_avl_unbalanced(&self) -> bool {
+        return self.avl_heaviness().abs() >= 2
+    }
+    // Positive when right heavy
+    fn avl_heaviness(&self) -> isize {
         let left_height = get_height_of_avl_tree(&self.left_child);
         let right_height = get_height_of_avl_tree(&self.right_child);
 
-
-
-        return (left_height - right_height).abs() >= 2
+        return right_height - left_height;
     }
 
     fn is_leaf(&self) -> bool {
@@ -100,7 +103,7 @@ where T: PartialOrd + Copy
 
         // Now we fix any AVL mismatches
         if new_tree_generic_bst.is_avl_unbalanced() {
-            //Assume right is heavier
+            println!("New generic bst {:?} is unbalanced", new_tree_generic_bst);
             return new_tree_generic_bst.fix_avl();
         }
         else {
@@ -143,7 +146,25 @@ where T: PartialOrd + Copy
     }
 
     fn fix_avl(self) -> AVLTree<T> {
-        return self;
+        //Assume right is heavier
+        let avl_heaviness = (&self).avl_heaviness();
+        let data = (&self).data;
+
+        // If this tree is right heavy or balanced
+        if avl_heaviness >= 0 {
+            println!("{:?}   is right heavy", self);
+            let right_rotation = self.right_rotate(data);
+            println!("Right rotation {:?}", right_rotation);
+            return right_rotation;
+        }
+        else {
+            // Must exist based on avl_heaviness
+            let right_tree_data = (&self).right_child.as_ref().unwrap().data;
+            println!("Right tree data {:?}", right_tree_data);
+            let right_rotate_right_child = self.right_rotate(right_tree_data);
+            return right_rotate_right_child.left_rotate(data);
+
+        }
     }
 
 
@@ -197,7 +218,7 @@ where T: PartialOrd + Copy
 
 
 
-    fn left_rotate(self, data:T) -> AVLTree<T> {
+    fn right_rotate(self, data:T) -> AVLTree<T> {
         if data > self.data {
             match self.right_child {
                 None => {
@@ -214,7 +235,7 @@ where T: PartialOrd + Copy
                     let new_tree = AVLTree {
                         data: self.data,
                         left_child: self.left_child,
-                        right_child: Some(Box::new(right_child.left_rotate(data))),
+                        right_child: Some(Box::new(right_child.right_rotate(data))),
                         height: self.height
                     };
                     return new_tree.update_height();
@@ -236,7 +257,7 @@ where T: PartialOrd + Copy
                 Some(left_child) => {
                     let new_tree = AVLTree {
                         data: self.data,
-                        left_child: Some(Box::new(left_child.left_rotate(data))),
+                        left_child: Some(Box::new(left_child.right_rotate(data))),
                         right_child: self.right_child,
                         height: self.height
                     };
@@ -281,7 +302,7 @@ where T: PartialOrd + Copy
         }
     }
 
-    fn right_rotate(self, data:T) -> AVLTree<T> {
+    fn left_rotate(self, data:T) -> AVLTree<T> {
         if data > self.data {
             match self.right_child {
                 None => {
@@ -298,7 +319,7 @@ where T: PartialOrd + Copy
                     let new_tree = AVLTree {
                         data: self.data,
                         left_child: self.left_child,
-                        right_child: Some(Box::new(right_child.right_rotate(data))),
+                        right_child: Some(Box::new(right_child.left_rotate(data))),
                         height: self.height
                     };
                     return new_tree.update_height();
@@ -320,7 +341,7 @@ where T: PartialOrd + Copy
                 Some(left_child) => {
                     let new_tree = AVLTree {
                         data: self.data,
-                        left_child: Some(Box::new(left_child.right_rotate(data))),
+                        left_child: Some(Box::new(left_child.left_rotate(data))),
                         right_child: self.right_child,
                         height: self.height
                     };
@@ -441,9 +462,10 @@ mod test {
         let insert_to_right = base_tree.insert_bst(15);
         assert!(!insert_to_right.is_leaf());
 
+
     }
     #[test]
-    fn test_rotate_left() {
+    fn test_rotate_right() {
         let base_tree = AVLTree::make_empty_tree(10);
         let tree = base_tree.insert_bst(15);
         let tree = tree.insert_bst(13);
@@ -452,20 +474,31 @@ mod test {
         let tree = tree.insert_bst(8);
         let tree = tree.insert_bst(3);
 
-        let rotated_left_tree = tree.left_rotate(10);
-        let expected_rotate_left = AVLTree::make_empty_tree(15);
-        let expected_rotate_left = expected_rotate_left.insert_bst(10).update_height();
-        let expected_rotate_left = expected_rotate_left.insert_bst(16).update_height();
-        let expected_rotate_left = expected_rotate_left.insert_bst(13).update_height();
-        let expected_rotate_left = expected_rotate_left.insert_bst(7).update_height();
-        let expected_rotate_left = expected_rotate_left.insert_bst(3).update_height();
-        let expected_rotate_left = expected_rotate_left.insert_bst(8).update_height();
-        assert_eq!(rotated_left_tree, expected_rotate_left);
+        let rotated_right_tree = tree.right_rotate(10);
+        let expected_rotate_right = AVLTree::make_empty_tree(15);
+        let expected_rotate_right = expected_rotate_right.insert_bst(10).update_height();
+        let expected_rotate_right = expected_rotate_right.insert_bst(16).update_height();
+        let expected_rotate_right = expected_rotate_right.insert_bst(13).update_height();
+        let expected_rotate_right = expected_rotate_right.insert_bst(7).update_height();
+        let expected_rotate_right = expected_rotate_right.insert_bst(3).update_height();
+        let expected_rotate_right = expected_rotate_right.insert_bst(8).update_height();
+        assert_eq!(rotated_right_tree, expected_rotate_right);
+
+        let tree = AVLTree::make_empty_tree(15);
+        let tree = tree.insert_bst(17);
+        let tree = tree.insert_bst(20);
+
+        assert_eq!(tree.right_rotate(15), AVLTree {
+            data: 17,
+            left_child: Some(Box::new(AVLTree::make_empty_tree(15))),
+            right_child: Some(Box::new(AVLTree::make_empty_tree(20))),
+            height: 1
+        });
 
     }
 
     #[test]
-    fn test_rotate_right() {
+    fn test_rotate_left() {
         let tree = AVLTree::make_empty_tree(15);
         let tree = tree.insert_bst(10).update_height();
         let tree = tree.insert_bst(16).update_height();
@@ -474,17 +507,19 @@ mod test {
         let tree = tree.insert_bst(3).update_height();
         let tree = tree.insert_bst(8).update_height();
 
-        let rotated_right_tree = tree.right_rotate(15);
+        let rotated_left_tree = tree.left_rotate(15);
 
-        let  expected_rotate_right = AVLTree::make_empty_tree(10);
-        let  expected_rotate_right =  expected_rotate_right.insert_bst(15).update_height();
-        let  expected_rotate_right =  expected_rotate_right.insert_bst(13).update_height();
-        let  expected_rotate_right =  expected_rotate_right.insert_bst(16).update_height();
-        let  expected_rotate_right =  expected_rotate_right.insert_bst(7).update_height();
-        let  expected_rotate_right =  expected_rotate_right.insert_bst(8).update_height();
-        let  expected_rotate_right =  expected_rotate_right.insert_bst(3).update_height();
+        let  expected_rotate_left = AVLTree::make_empty_tree(10);
+        let  expected_rotate_left =  expected_rotate_left.insert_bst(15).update_height();
+        let  expected_rotate_left =  expected_rotate_left.insert_bst(13).update_height();
+        let  expected_rotate_left =  expected_rotate_left.insert_bst(16).update_height();
+        let  expected_rotate_left =  expected_rotate_left.insert_bst(7).update_height();
+        let  expected_rotate_left =  expected_rotate_left.insert_bst(8).update_height();
+        let  expected_rotate_left =  expected_rotate_left.insert_bst(3).update_height();
 
-        assert_eq!(rotated_right_tree, expected_rotate_right);
+        assert_eq!(rotated_left_tree, expected_rotate_left);
+
+
     }
 
     #[test]
