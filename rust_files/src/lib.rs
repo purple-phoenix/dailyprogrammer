@@ -6,6 +6,7 @@ mod utility;
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 use crate::project_381_yahtzee::yahtzee::yahtzee_upper;
 use crate::project_375_graph_of_thrones::graph_of_thrones::{make_graph_from_lines};
+use crate::utility::avltree::{make_tree_from_list};
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
@@ -48,6 +49,22 @@ pub fn qualify_graph_of_thrones() -> bool {
     return !graph.is_balanced();
 }
 
+pub fn qualify_avl() -> bool {
+    let num_elms_in_bst = 1000;
+    let mut bst_init_vector = Vec::with_capacity(num_elms_in_bst);
+
+    for x in 0..num_elms_in_bst {
+        bst_init_vector.push(x);
+    }
+
+    let bst = make_tree_from_list(&bst_init_vector);
+
+    match bst {
+        None => return false,
+        Some(_bst) => return true
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -66,6 +83,11 @@ mod tests {
     #[test]
     fn test_qualify_graph_of_thrones() {
         assert!(qualify_graph_of_thrones())
+    }
+
+    #[test]
+    fn test_qualify_avl() {
+        assert!(qualify_avl())
     }
 
 }

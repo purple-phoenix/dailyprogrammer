@@ -12,6 +12,27 @@ pub struct AVLTree<T> {
 }
 
 
+pub fn make_tree_from_list<T: Clone + Debug + PartialOrd + Copy>(data_set: &[T]) -> Option<AVLTree<T>>{
+    if data_set.is_empty() {
+        return None
+    }
+
+    let data = data_set[0].clone();
+
+    return Some(make_tree_from_list_helper(&data_set[1..],
+                                      AVLTree::make_empty_tree(data)));
+}
+
+pub fn make_tree_from_list_helper<T: Clone + Debug + PartialOrd + Copy>(data_set: &[T], accum: AVLTree<T>) -> AVLTree<T> {
+    if data_set.is_empty() {
+        return accum
+    }
+    else {
+        let accum = accum.insert(data_set[0].clone());
+        return make_tree_from_list_helper(&data_set[1..],
+                                          accum);
+    }
+}
 
 impl <T> AVLTree<T>
 where T: PartialOrd + Copy + Debug
@@ -26,9 +47,15 @@ where T: PartialOrd + Copy + Debug
         };
     }
 
+
+
     pub fn get_height(&self) -> isize {
         return 1 + max(get_height_of_avl_tree(&self.left_child),
                        get_height_of_avl_tree(&self.right_child));
+    }
+
+    pub fn insert(self, data: T) -> AVLTree<T> {
+        return self.insert_avl(data);
     }
 
     pub fn insert_bst(self, new_node_value: T) -> AVLTree<T> {
@@ -92,18 +119,12 @@ where T: PartialOrd + Copy + Debug
         return right_height - left_height;
     }
 
-    fn is_leaf(&self) -> bool {
-        return false;
-    }
-
     fn insert_avl(self, new_node_value: T) -> AVLTree<T> {
-        let new_tree_generic_bst = self.insert_bst(new_node_value);
+        let new_tree_generic_bst = self.insert_bst(new_node_value).update_height();
 
         let data = new_tree_generic_bst.data;
-
         // Now we fix any AVL mismatches
         if new_tree_generic_bst.is_avl_unbalanced() {
-            println!("New generic bst {:?} is unbalanced", new_tree_generic_bst);
             return new_tree_generic_bst.fix_avl();
         }
         else {
@@ -142,7 +163,6 @@ where T: PartialOrd + Copy + Debug
         }
 
 
-        return AVLTree::make_empty_tree(new_node_value)
     }
 
     fn fix_avl(self) -> AVLTree<T> {
@@ -151,18 +171,19 @@ where T: PartialOrd + Copy + Debug
         let data = (&self).data;
 
         // If this tree is right heavy or balanced
-        if avl_heaviness >= 0 {
-            println!("{:?}   is right heavy", self);
+        if avl_heaviness == 0 {
+            return self;
+        }
+        else if avl_heaviness > 0 {
             let right_rotation = self.right_rotate(data);
-            println!("Right rotation {:?}", right_rotation);
             return right_rotation;
         }
         else {
             // Must exist based on avl_heaviness
             let right_tree_data = (&self).right_child.as_ref().unwrap().data;
-            println!("Right tree data {:?}", right_tree_data);
             let right_rotate_right_child = self.right_rotate(right_tree_data);
-            return right_rotate_right_child.left_rotate(data);
+            let left_rotate_original_data = right_rotate_right_child.left_rotate(data);
+            return left_rotate_original_data;
 
         }
     }
@@ -456,15 +477,6 @@ mod test {
     }
 
     #[test]
-    fn test_is_leaf() {
-        let base_tree = AVLTree::make_empty_tree(10);
-        assert!(base_tree.is_leaf());
-        let insert_to_right = base_tree.insert_bst(15);
-        assert!(!insert_to_right.is_leaf());
-
-
-    }
-    #[test]
     fn test_rotate_right() {
         let base_tree = AVLTree::make_empty_tree(10);
         let tree = base_tree.insert_bst(15);
@@ -533,6 +545,7 @@ mod test {
 
     #[test]
     fn test_insert_avl() {
+
         let tree = AVLTree::make_empty_tree(15);
         let tree = tree.insert_avl(17);
         let tree = tree.insert_avl(20);
@@ -553,6 +566,31 @@ mod test {
             })),
             height: 1
         });
+
+        let tree = AVLTree::make_empty_tree(15);
+        let tree = tree.insert_avl(17);
+        let tree = tree.insert_avl(20);
+        let tree = tree.insert_avl(21);
+        let tree = tree.insert_avl(23);
+        let tree = tree.insert_avl(25);
+
+        assert_eq!(tree, AVLTree {
+            data: 21,
+            left_child: Some(Box::new(AVLTree {
+                data: 17,
+                left_child: Some(Box::new(AVLTree::make_empty_tree(15))),
+                right_child: Some(Box::new(AVLTree::make_empty_tree(20))),
+                height: 1
+            })),
+            right_child: Some(Box::new(AVLTree {
+                data: 23,
+                left_child: None,
+                right_child: Some(Box::new(AVLTree::make_empty_tree(25))),
+                height: 1
+            })),
+            height: 2
+        })
+
     }
 
 }
