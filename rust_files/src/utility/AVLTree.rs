@@ -81,12 +81,28 @@ where T: PartialOrd + Copy
 
 
     fn is_avl_unbalanced(&self) -> bool {
-        return false
+        let left_height = get_height_of_avl_tree(&self.left_child);
+        let right_height = get_height_of_avl_tree(&self.right_child);
+
+
+
+        return (left_height - right_height).abs() >= 2
     }
 
     fn is_leaf(&self) -> bool {
         return false;
     }
+
+    fn insert_avl(self, new_node_value: T) -> AVLTree<T> {
+        let new_tree_generic_bst = self.insert_bst(new_node_value);
+
+        // Now we fix any AVL mismatches
+
+
+        return AVLTree::make_empty_tree(new_node_value)
+    }
+
+
 
     fn update_height(self) -> AVLTree<T> {
         let new_height = self.get_height();
@@ -316,6 +332,9 @@ fn get_height_of_avl_tree<T>(maybe_tree: &Option<Box<AVLTree<T>>>) -> isize {
 }
 
 
+
+
+
 #[cfg(test)]
 mod test {
 
@@ -368,7 +387,7 @@ mod test {
         let insert_to_right = base_tree.insert_bst(15);
         let insert_left_then_right = insert_to_right.insert_bst(13);
 
-        assert!(insert_left_then_right.is_avl_unbalanced());
+        assert!(insert_left_then_right.update_height().is_avl_unbalanced());
     }
 
     #[test]
