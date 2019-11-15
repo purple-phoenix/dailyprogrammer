@@ -96,10 +96,54 @@ where T: PartialOrd + Copy
     fn insert_avl(self, new_node_value: T) -> AVLTree<T> {
         let new_tree_generic_bst = self.insert_bst(new_node_value);
 
+        let data = new_tree_generic_bst.data;
+
         // Now we fix any AVL mismatches
+        if new_tree_generic_bst.is_avl_unbalanced() {
+            //Assume right is heavier
+            return new_tree_generic_bst.fix_avl();
+        }
+        else {
+           return match (new_tree_generic_bst.left_child, new_tree_generic_bst.right_child){
+               (None, None) => {
+                   return AVLTree::make_empty_tree(data)
+               },
+               (Some(left), None) => {
+                    let updated_tree = AVLTree {
+                        data,
+                        left_child: Some(Box::new(left.fix_avl())),
+                        right_child: None,
+                        height: 0
+                    };
+                    updated_tree.update_height()
+               },
+               (None, Some(right)) => {
+                    let updated_tree = AVLTree {
+                        data,
+                        left_child: None,
+                        right_child: Some(Box::new(right.fix_avl())),
+                        height: 0
+                    };
+                   updated_tree.update_height()
+               },
+               (Some(left), Some(right)) => {
+                   let updated_tree = AVLTree {
+                       data,
+                       left_child: Some(Box::new(left.fix_avl())),
+                       right_child: Some(Box::new(right.fix_avl())),
+                       height: 0
+                   };
+                   updated_tree.update_height()
+               }
+            }
+        }
 
 
         return AVLTree::make_empty_tree(new_node_value)
+    }
+
+    fn fix_avl(self) -> AVLTree<T> {
+        return self;
     }
 
 
