@@ -16,6 +16,11 @@ fn main() -> io::Result<()> {
             let game = FalloutHackingGame::make_game(difficulty);
             let game_print = game.print_game();
 
+            let mut next_guess = String::new();
+            io::stdin.read_line(&mut next_guess);
+            let maybe_game = game.guess(next_guess);
+
+
         }
         Err(err_msg) => println!("{}", err_msg)
     }
@@ -33,7 +38,7 @@ fn collect_difficulty() -> Result<GameDifficulty, &'static str> {
     println!("Hard (4)");
     println!("Very Hard (5)");
     println!("q to quit");
-    
+
     let mut difficulty_selection = String::new();
     io::stdin().read_line(&mut difficulty_selection);
     let parsable_text = difficulty_selection.trim();

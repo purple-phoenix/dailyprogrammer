@@ -116,6 +116,16 @@ impl FalloutHackingGame {
         }
     }
 
+    pub fn guess(self, guess_word: String) -> Result<FalloutHackingGame, &str> {
+        if guess_word.len() != self.word_length {
+            return Err("Your guess is the wrong number of characters");
+        }
+        else {
+            //TODO
+            Ok(FalloutHackingGame::make_game(self.difficulty))
+        }
+    }
+
 
 
 }
