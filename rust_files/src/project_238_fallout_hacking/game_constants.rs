@@ -86,6 +86,11 @@ pub fn make_num_words(difficulty: &GameDifficulty) -> usize {
     return rng.gen_range(min_nw, max_nw);
 }
 
+pub fn get_rand_num_x_to_y(x: usize, y: usize) -> usize {
+    let mut rng = rand::thread_rng();
+    return rng.gen_range(x, y);
+}
+
 #[cfg(test)]
 mod tests {
 
