@@ -22,17 +22,19 @@ pub enum GameDifficulty {
 impl FalloutHackingGame {
 
     fn make_game(difficulty: GameDifficulty) -> FalloutHackingGame {
-        let other_words = Vec::with_capacity(make_num_words(&difficulty));
+        let num_words = make_num_words(&difficulty);
         let word_length = make_word_length(&difficulty);
+        let (other_words, correct_word) =
+            FalloutHackingGame::get_word_list_and_correct_word(word_length, num_words);
         FalloutHackingGame {
             word_length,
             other_words,
-            correct_word: "".to_owned(),
+            correct_word,
             difficulty
         }
     }
 
-    fn get_word_list(word_len: usize, num_words: usize) -> (Vec<String>, String) {
+    fn get_word_list_and_correct_word(word_len: usize, num_words: usize) -> (Vec<String>, String) {
         let all_words_of_len = collect_words_of_size_n(word_len);
         let total_words = all_words_of_len.len();
         let mut word_list = Vec::with_capacity(num_words);
@@ -80,9 +82,10 @@ mod tests {
 
     #[test]
     fn test_make_game_model() {
+        let game =
+            FalloutHackingGame::make_game(GameDifficulty::VeryEasy);
+        assert_eq!(game.correct_word.len(), game.word_length);
 
-
-        assert!(false);
     }
 
     #[test]
@@ -95,7 +98,8 @@ mod tests {
     fn test_get_word_list_and_correct_word() {
         let word_len = 6;
         let num_words = 14;
-        let (word_list, correct_word) = FalloutHackingGame::get_word_list(word_len, num_words);
+        let (word_list, correct_word) =
+            FalloutHackingGame::get_word_list_and_correct_word(word_len, num_words);
         assert_eq!(word_list.len(), num_words);
         for word in word_list {
             assert_eq!(word.len(), word_len);
