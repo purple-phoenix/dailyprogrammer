@@ -1,6 +1,7 @@
 use crate::project_238_fallout_hacking::game_constants::{make_num_words,
                                                          make_word_length,
-                                                         get_rand_num_x_to_y};
+                                                         get_rand_num_x_to_y,
+                                                         NUM_GUESSES_PER_GAME};
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
@@ -85,6 +86,14 @@ impl FalloutHackingGame {
         }
 
         return game_print
+    }
+
+    fn make_guess_print(&self) -> String {
+        let guesses_remaining = NUM_GUESSES_PER_GAME - self.current_guesses;
+        return "Guess (".to_owned() +
+            guesses_remaining.to_string().as_str() +
+            " left)?".to_owned().as_ref()
+
     }
 
 
@@ -176,6 +185,22 @@ mod tests {
         println!("{}", game_print);
         assert!(game_print_regex.is_match(game_print.as_str()));
 
+    }
+
+    #[test]
+    fn test_make_guess_print() {
+        let game =
+            FalloutHackingGame::make_game(GameDifficulty::VeryHard);
+        let init_guess_print = game.make_guess_print();
+        assert_eq!(init_guess_print, "Guess (4 left)?");
+        let game = game.increment_guess();
+        assert_eq!(game.make_guess_print(), "Guess (3 left)?");
+        let game = game.increment_guess();
+        assert_eq!(game.make_guess_print(), "Guess (2 left)?");
+        let game = game.increment_guess();
+        assert_eq!(game.make_guess_print(), "Guess (1 left)?");
+        let game = game.increment_guess();
+        assert_eq!(game.make_guess_print(), "Guess (4 left)?");
     }
 
 

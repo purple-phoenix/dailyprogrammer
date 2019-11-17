@@ -91,6 +91,9 @@ pub fn get_rand_num_x_to_y(x: usize, y: usize) -> usize {
     return rng.gen_range(x, y);
 }
 
+pub const NUM_GUESSES_PER_GAME: usize = 4;
+
+
 #[cfg(test)]
 mod tests {
 
