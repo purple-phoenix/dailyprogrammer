@@ -89,6 +89,21 @@ impl FalloutHackingGame {
 
 
 
+    fn increment_guess(self) -> FalloutHackingGame {
+        if self.current_guesses == 3 {
+            return FalloutHackingGame::make_game(self.difficulty);
+        }
+        return FalloutHackingGame {
+            word_length: self.word_length,
+            other_words: self.other_words,
+            correct_word: self.correct_word,
+            difficulty: self.difficulty,
+            current_guesses: self.current_guesses + 1
+        }
+    }
+
+
+
 }
 
 fn collect_words_of_size_n(n: usize) -> Vec<String>{
