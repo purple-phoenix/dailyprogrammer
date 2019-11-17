@@ -11,7 +11,8 @@ struct FalloutHackingGame {
     word_length: usize,
     other_words: Vec<String>,
     correct_word: String,
-    difficulty: GameDifficulty
+    difficulty: GameDifficulty,
+    current_guesses: usize
 }
 
 pub enum GameDifficulty {
@@ -47,7 +48,8 @@ impl FalloutHackingGame {
             word_length,
             other_words,
             correct_word,
-            difficulty
+            difficulty,
+            current_guesses: 0
         }
     }
 
@@ -73,9 +75,16 @@ impl FalloutHackingGame {
 
     }
 
-    fn make_start_of_game_print(&self) -> String {
-        let difficulty_str_format = format!("Difficulty: {}\n", self.difficulty);
-        return difficulty_str_format
+    fn make_game_print(&self) -> String {
+        let mut game_print = format!("Difficulty: {}\n", self.difficulty);
+        game_print += self.correct_word.to_ascii_uppercase().as_ref();
+        game_print += "\n";
+        for word in &self.other_words {
+            game_print += word.to_ascii_uppercase().as_str();
+            game_print += "\n";
+        }
+
+        return game_print
     }
 
 
@@ -101,6 +110,9 @@ fn collect_words_of_size_n(n: usize) -> Vec<String>{
 mod tests {
 
     use super::*;
+    use self::regex::Regex;
+
+    extern crate regex;
 
     #[test]
     fn test_make_game_model() {
@@ -130,12 +142,24 @@ mod tests {
     }
 
     #[test]
-    fn test_make_start_of_game_print() {
+    fn test_make_game_print() {
         let game =
             FalloutHackingGame::make_game(GameDifficulty::VeryEasy);
-        let game_print = game.make_start_of_game_print();
+        let game_print = game.make_game_print();
+
+        let total_words = game.other_words.len() + 1;
+
+        let mut regex_str = r"Difficulty: Very Easy\n".to_owned();
+        let word_regex = "(\\w{".to_owned() +
+            game.word_length.to_string().as_ref() + "}\n)".to_owned().as_ref();
+        let all_words_regex = word_regex + "{" + total_words.to_string().as_str() + "}";
+        regex_str += all_words_regex.as_ref();
+
+        let game_print_regex = Regex::new(regex_str.as_str()).unwrap();
+        println!("Regex\n{}\n\n", regex_str);
+
         println!("{}", game_print);
-        assert!(game_print.contains("Difficulty: Very Easy\n"));
+        assert!(game_print_regex.is_match(game_print.as_str()));
 
     }
 
