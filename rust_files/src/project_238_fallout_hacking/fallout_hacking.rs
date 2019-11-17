@@ -1,7 +1,10 @@
-use crate::project_238_fallout_hacking::game_constants::*;
+use crate::project_238_fallout_hacking::game_constants::{make_num_words,
+                                                         make_word_length,
+                                                         get_rand_num_x_to_y};
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
+use std::fmt::{Display, Formatter, Error};
 
 struct FalloutHackingGame {
 
@@ -18,6 +21,20 @@ pub enum GameDifficulty {
     Hard,
     VeryHard
 }
+
+impl Display for GameDifficulty {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        match self {
+            GameDifficulty::VeryEasy => write!(f, "Very Easy"),
+            GameDifficulty::Easy => write!(f, "Easy"),
+            GameDifficulty::Average => write!(f, "Average"),
+            GameDifficulty::Hard => write!(f, "Hard"),
+            GameDifficulty::VeryHard => write!(f, "Very Hard")
+        };
+        Ok(())
+    }
+}
+
 
 impl FalloutHackingGame {
 
@@ -54,6 +71,11 @@ impl FalloutHackingGame {
             }
         }
 
+    }
+
+    fn make_start_of_game_print(&self) -> String {
+        let difficulty_str_format = format!("Difficulty: {}\n", self.difficulty);
+        return difficulty_str_format
     }
 
 
@@ -106,5 +128,16 @@ mod tests {
         }
         assert_eq!(correct_word.len(), word_len);
     }
+
+    #[test]
+    fn test_make_start_of_game_print() {
+        let game =
+            FalloutHackingGame::make_game(GameDifficulty::VeryEasy);
+        let game_print = game.make_start_of_game_print();
+        println!("{}", game_print);
+        assert!(game_print.contains("Difficulty: Very Easy\n"));
+
+    }
+
 
 }
