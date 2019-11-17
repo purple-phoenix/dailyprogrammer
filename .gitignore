@@ -2,3 +2,4 @@
 *pycache*
 *.pyc
 **/results/*.xml
+*.iml
