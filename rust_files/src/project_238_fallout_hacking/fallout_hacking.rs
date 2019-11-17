@@ -7,7 +7,7 @@ use std::fs::File;
 use std::io::{BufReader, BufRead};
 use std::fmt::{Display, Formatter, Error};
 
-struct FalloutHackingGame {
+pub struct FalloutHackingGame {
 
     word_length: usize,
     other_words: Vec<String>,
@@ -40,7 +40,7 @@ impl Display for GameDifficulty {
 
 impl FalloutHackingGame {
 
-    fn make_game(difficulty: GameDifficulty) -> FalloutHackingGame {
+    pub fn make_game(difficulty: GameDifficulty) -> FalloutHackingGame {
         let num_words = make_num_words(&difficulty);
         let word_length = make_word_length(&difficulty);
         let (other_words, correct_word) =
@@ -88,6 +88,11 @@ impl FalloutHackingGame {
         return game_print
     }
 
+    pub fn print_game(&self) -> () {
+        println!("{}", self.make_game_print());
+        println!("{}", self.make_guess_print());
+    }
+
     fn make_guess_print(&self) -> String {
         let guesses_remaining = NUM_GUESSES_PER_GAME - self.current_guesses;
         return "Guess (".to_owned() +
@@ -114,6 +119,7 @@ impl FalloutHackingGame {
 
 
 }
+
 
 fn collect_words_of_size_n(n: usize) -> Vec<String>{
     let mut words = Vec::with_capacity(1000);
