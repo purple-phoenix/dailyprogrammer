@@ -28,6 +28,7 @@ fn main() -> io::Result<()> {
 fn make_guesses(game: FalloutHackingGame) -> io::Result<()> {
     let (next_game, has_won) = make_guess(game);
     if has_won {
+        println!("Congratulations! You've won!");
         return Ok(());
     }
     else {
@@ -39,7 +40,7 @@ fn make_guesses(game: FalloutHackingGame) -> io::Result<()> {
 fn make_guess(game: FalloutHackingGame) -> (FalloutHackingGame, bool) {
     let mut next_guess = String::new();
     io::stdin().read_line(&mut next_guess);
-    next_guess = next_guess.trim().parse().unwrap();
+    next_guess = next_guess.to_ascii_lowercase().trim().parse().unwrap();
     let maybe_game = game.guess(next_guess);
     match maybe_game {
         Ok((new_game, has_won)) => (new_game, has_won),
