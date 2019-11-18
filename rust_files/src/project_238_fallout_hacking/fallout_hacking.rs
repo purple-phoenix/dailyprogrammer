@@ -130,10 +130,6 @@ impl FalloutHackingGame {
 
     pub fn guess(self, guess_word: String) -> Result<(FalloutHackingGame, bool), (&'static str, FalloutHackingGame)> {
         if guess_word.len() != self.word_length {
-            println!("{}  {}", guess_word.len(), self.word_length);
-            for a_char in guess_word.chars() {
-                println!("{}", a_char);
-            }
             return Err(("Your guess is the wrong number of characters", self));
         }
         else {
@@ -141,12 +137,28 @@ impl FalloutHackingGame {
                 return Ok((self, true));
             }
             else {
+                //Indicate number of indexes which are the same as the correct word
+                let (num_indexes_correct, possible_indexes)
+                    = FalloutHackingGame::get_num_indexes_correct(&guess_word, &self.correct_word);
+                println!("{}/{} chars correct", num_indexes_correct, possible_indexes);
                 return Ok((self.increment_guess(), false))
             }
         }
     }
 
-
+    fn get_num_indexes_correct(guess_word: &String, correct_word: &String) -> (usize, usize) {
+        let mut num_indexes_correct = 0;
+        let possible_indexes_correct = correct_word.len();
+        let mut guess_chars = guess_word.chars();
+        for (an_index, correct_word_char)
+            in correct_word.chars().into_iter().enumerate() {
+            let guess_char = guess_chars.next().unwrap();
+            if guess_char == correct_word_char {
+                num_indexes_correct += 1;
+            }
+        }
+        return (num_indexes_correct, possible_indexes_correct)
+    }
 
 }
 
@@ -237,6 +249,20 @@ mod tests {
         assert_eq!(game.make_guess_print(), "Guess (1 left)?");
         let game = game.increment_guess();
         assert_eq!(game.make_guess_print(), "Guess (4 left)?");
+    }
+
+    #[test]
+    fn test_get_num_indexes_correct() {
+        let word1 = &"abcdegkj".to_string();
+        let word2 = &"zyqolmnv".to_string();
+        assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word2),
+                   (0, 8));
+        let word3 = &"jkgedcba".to_string();
+        assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word2),
+                   (0, 8));
+        let word4 = &"aecjeijl".to_string();
+        assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word4),
+                   (3, 8))
     }
 
 
