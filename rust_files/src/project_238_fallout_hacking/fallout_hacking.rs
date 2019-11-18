@@ -78,16 +78,22 @@ impl FalloutHackingGame {
 
     fn make_game_print(&self) -> String {
         let mut game_print = format!("Difficulty: {}\n", self.difficulty);
-        let random_index = get_rand_num_x_to_y(0, self.other_words.len());
+        let random_index = get_rand_num_x_to_y(0, self.other_words.len() + 1);
         let mut index_counter = 0;
+        let mut correct_word_printed = false;
         for word in &self.other_words {
-            if index_counter == random_index {
+            if !correct_word_printed && index_counter == random_index {
                 game_print+= self.correct_word.to_ascii_uppercase().as_str();
                 game_print += "\n";
+                correct_word_printed = true;
             }
             index_counter += 1;
 
             game_print += word.to_ascii_uppercase().as_str();
+            game_print += "\n";
+        }
+        if !correct_word_printed {
+            game_print+= self.correct_word.to_ascii_uppercase().as_str();
             game_print += "\n";
         }
 
