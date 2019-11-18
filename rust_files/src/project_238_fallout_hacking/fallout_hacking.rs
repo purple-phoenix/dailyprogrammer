@@ -116,13 +116,17 @@ impl FalloutHackingGame {
         }
     }
 
-    pub fn guess(self, guess_word: String) -> Result<FalloutHackingGame, &str> {
+    pub fn guess(self, guess_word: String) -> Result<(FalloutHackingGame, bool), (&'static str, FalloutHackingGame)> {
         if guess_word.len() != self.word_length {
-            return Err("Your guess is the wrong number of characters");
+            println!("{}  {}", guess_word.len(), self.word_length);
+            for a_char in guess_word.chars() {
+                println!("{}", a_char);
+            }
+            return Err(("Your guess is the wrong number of characters", self));
         }
         else {
             //TODO
-            Ok(FalloutHackingGame::make_game(self.difficulty))
+            Ok((FalloutHackingGame::make_game(self.difficulty), false))
         }
     }
 

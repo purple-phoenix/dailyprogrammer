@@ -16,11 +16,7 @@ fn main() -> io::Result<()> {
             let game = FalloutHackingGame::make_game(difficulty);
             let game_print = game.print_game();
 
-            let mut next_guess = String::new();
-            io::stdin.read_line(&mut next_guess);
-            let maybe_game = game.guess(next_guess);
-
-
+            return make_guesses(game);
         }
         Err(err_msg) => println!("{}", err_msg)
     }
@@ -28,6 +24,31 @@ fn main() -> io::Result<()> {
     Ok(())
 
 }
+
+fn make_guesses(game: FalloutHackingGame) -> io::Result<()> {
+    let (next_game, has_won) = make_guess(game);
+    if has_won {
+        return Ok(());
+    }
+    else {
+        return make_guesses(next_game);
+    }
+}
+
+fn make_guess(game: FalloutHackingGame) -> (FalloutHackingGame, bool) {
+    let mut next_guess = String::new();
+    io::stdin().read_line(&mut next_guess);
+    next_guess = next_guess.trim().parse().unwrap();
+    let maybe_game = game.guess(next_guess);
+    match maybe_game {
+        Ok((new_game, has_won)) => (new_game, has_won),
+        Err((msg, old_game)) => {
+            println!("{}", msg);
+            return (old_game, false)
+        }
+    }
+}
+
 
 fn collect_difficulty() -> Result<GameDifficulty, &'static str> {
 
