@@ -125,8 +125,12 @@ impl FalloutHackingGame {
             return Err(("Your guess is the wrong number of characters", self));
         }
         else {
-            //TODO
-            Ok((FalloutHackingGame::make_game(self.difficulty), false))
+            if guess_word.eq(&self.correct_word) {
+                return Ok((self, true));
+            }
+            else {
+                return Ok((self.increment_guess(), false))
+            }
         }
     }
 

@@ -31,6 +31,7 @@ fn make_guesses(game: FalloutHackingGame) -> io::Result<()> {
         return Ok(());
     }
     else {
+        next_game.print_game();
         return make_guesses(next_game);
     }
 }
