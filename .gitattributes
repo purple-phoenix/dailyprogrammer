@@ -12,3 +12,6 @@
 # Denote all files that are truly binary and should not be modified.
 *.png binary
 *.jpg binary
+
+rust_files/src/project_238_fallout_hacking/enable1.txt linguist-vendored=false
+
