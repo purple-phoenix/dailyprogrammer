@@ -150,8 +150,7 @@ impl FalloutHackingGame {
         let mut num_indexes_correct = 0;
         let possible_indexes_correct = correct_word.len();
         let mut guess_chars = guess_word.chars();
-        for (an_index, correct_word_char)
-            in correct_word.chars().into_iter().enumerate() {
+        for correct_word_char in correct_word.chars() {
             let guess_char = guess_chars.next().unwrap();
             if guess_char == correct_word_char {
                 num_indexes_correct += 1;
@@ -258,7 +257,7 @@ mod tests {
         assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word2),
                    (0, 8));
         let word3 = &"jkgedcba".to_string();
-        assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word2),
+        assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word3),
                    (0, 8));
         let word4 = &"aecjeijl".to_string();
         assert_eq!(FalloutHackingGame::get_num_indexes_correct(word1, word4),
