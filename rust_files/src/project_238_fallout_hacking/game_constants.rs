@@ -23,7 +23,8 @@ const MAX_HARD_NW :usize = 12;
 const MIN_VERY_HARD_NW:usize = 10;
 const MAX_VERY_HARD_NW:usize = 14;
 
-pub fn get_word_number_range(difficulty: &GameDifficulty) -> (usize, usize) {
+fn get_num_words_range(difficulty: &GameDifficulty) -> (usize, usize) {
+
     return match difficulty {
         GameDifficulty::VeryEasy => (MIN_VERY_EASY_NW, MAX_VERY_EASY_NW),
         GameDifficulty::Easy => (MIN_EASY_NW, MAX_EASY_NW),
@@ -63,16 +64,7 @@ fn get_word_length_range(difficulty: &GameDifficulty) -> (usize, usize) {
     };
 }
 
-fn get_num_words_range(difficulty: &GameDifficulty) -> (usize, usize) {
 
-    return match difficulty {
-        GameDifficulty::VeryEasy => (MIN_VERY_EASY_NW, MAX_VERY_EASY_NW),
-        GameDifficulty::Easy => (MIN_EASY_NW, MAX_EASY_NW),
-        GameDifficulty::Average => (MIN_AVERAGE_NW, MAX_AVERAGE_NW),
-        GameDifficulty::Hard => (MIN_HARD_NW, MAX_HARD_NW),
-        GameDifficulty::VeryHard => (MIN_VERY_HARD_NW, MAX_VERY_HARD_NW)
-    };
-}
 
 pub fn make_word_length(difficulty: &GameDifficulty) -> usize {
     let mut rng = rand::thread_rng();
