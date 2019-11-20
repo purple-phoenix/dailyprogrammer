@@ -2,6 +2,7 @@ mod project_212_rovarspraket;
 mod project_381_yahtzee;
 mod project_375_graph_of_thrones;
 pub mod project_238_fallout_hacking;
+mod project_375_print_number_digit;
 mod utility;
 
 use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
