@@ -1,7 +1,8 @@
 
 
-fn increment_digits(num: i32) -> i32 {
+pub fn increment_digits(num: i32) -> i32 {
     let digits = get_digits(num);
+    println!("{:?}", digits);
     let incremented_digits: Vec<i32> = digits.into_iter()
         .map(|digit| digit + 1).rev().collect();
     println!("Incremented digits {:?}", incremented_digits);

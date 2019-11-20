@@ -9,6 +9,7 @@ use crate::project_212_rovarspraket::rovarspraket::{lang_to_rov, rov_to_lang};
 use crate::project_381_yahtzee::yahtzee::yahtzee_upper;
 use crate::project_375_graph_of_thrones::graph_of_thrones::{make_graph_from_lines};
 use crate::utility::avltree::{make_tree_from_list};
+use crate::project_375_print_number_digit::print_number_digit::increment_digits;
 
 use std::fs::File;
 use std::io::{BufReader, BufRead};
@@ -67,6 +68,19 @@ pub fn qualify_avl() -> bool {
     }
 }
 
+pub fn qualify_print_number_digit() -> bool {
+    let positive_works = increment_digits(1193304) == 22104415;
+    println!("{}", increment_digits(-384039));
+    /*
+    Thinking about what the expected behavior should be for negative numbers now that
+    I've considered a negative number with a 0 digit like -100 should this be -11(-011)
+    or -211? Instructions unclear :) So it is what I've implemented
+    */
+    let negative_works = increment_digits(-384139) == -273028;
+    let zero_works = increment_digits(0) == 1;
+    return positive_works && negative_works && zero_works;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -90,6 +104,11 @@ mod tests {
     #[test]
     fn test_qualify_avl() {
         assert!(qualify_avl())
+    }
+
+    #[test]
+    fn test_qualify_print_number_digit() {
+        assert!(qualify_print_number_digit())
     }
 
 }
