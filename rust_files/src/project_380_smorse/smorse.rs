@@ -5,7 +5,36 @@ fn smorse(word: String) -> String {
 }
 
 fn make_smorse_letter_map() -> HashMap<char, String> {
-    return HashMap::new()
+    let mut map = HashMap::new();
+
+    map.insert('a', ".-".to_string());
+    map.insert('b', "-...".to_string());
+    map.insert('c', "-.-.".to_string());
+    map.insert('d', "-..".to_string());
+    map.insert('e', ".".to_string());
+    map.insert('f', "..-.".to_string());
+    map.insert('g', "--.".to_string());
+    map.insert('h', "....".to_string());
+    map.insert('i', "..".to_string());
+    map.insert('j', ".---".to_string());
+    map.insert('k', "-.-".to_string());
+    map.insert('l', ".-..".to_string());
+    map.insert('m', "--".to_string());
+    map.insert('n', "-.".to_string());
+    map.insert('o', "---".to_string());
+    map.insert('p', ".--.".to_string());
+    map.insert('q', "--.-".to_string());
+    map.insert('r', ".-.".to_string());
+    map.insert('s', "...".to_string());
+    map.insert('t', "-".to_string());
+    map.insert('u', "..-".to_string());
+    map.insert('v', "...-".to_string());
+    map.insert('w', ".--".to_string());
+    map.insert('x', "-..-".to_string());
+    map.insert('y', "-.--".to_string());
+    map.insert('z', "--..".to_string());
+
+    return map
 }
 
 
