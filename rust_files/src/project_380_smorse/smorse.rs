@@ -28,30 +28,30 @@ mod tests {
 
         verify_smorse_char(&map, 'a', ".-".to_string());
         verify_smorse_char(&map, 'b', "-...".to_string());
-        verify_smorse_char(&map, 'c', "-.-.".to_ascii_uppercase());
-        verify_smorse_char(&map, 'd', "-..".to_ascii_uppercase());
-        verify_smorse_char(&map, 'e', ".".to_ascii_uppercase());
-        verify_smorse_char(&map, 'f', "..-.".to_ascii_uppercase());
-        verify_smorse_char(&map, 'g', "--.".to_ascii_uppercase());
-        verify_smorse_char(&map, 'h', "....".to_ascii_uppercase());
-        verify_smorse_char(&map, 'i', "..".to_ascii_uppercase());
-        verify_smorse_char(&map, 'j', ".---".to_ascii_uppercase());
-        verify_smorse_char(&map, 'k', "-.-".to_ascii_uppercase());
-        verify_smorse_char(&map, 'l', ".-..".to_ascii_uppercase());
-        verify_smorse_char(&map, 'm', "--".to_ascii_uppercase());
-        verify_smorse_char(&map, 'n', "-.".to_ascii_uppercase());
-        verify_smorse_char(&map, 'o', "---".to_ascii_uppercase());
-        verify_smorse_char(&map, 'p', ".--.".to_ascii_uppercase());
-        verify_smorse_char(&map, 'q', "--.-".to_ascii_uppercase());
-        verify_smorse_char(&map, 'r', ".-.".to_ascii_uppercase());
-        verify_smorse_char(&map, 's', "...".to_ascii_uppercase());
-        verify_smorse_char(&map, 't', "-".to_ascii_uppercase());
-        verify_smorse_char(&map, 'u', "..-".to_ascii_uppercase());
-        verify_smorse_char(&map, 'v', "...-".to_ascii_uppercase());
-        verify_smorse_char(&map, 'w', ".--".to_ascii_uppercase());
-        verify_smorse_char(&map, 'x', "-..-".to_ascii_uppercase());
-        verify_smorse_char(&map, 'y', "-.--".to_ascii_uppercase());
-        verify_smorse_char(&map, 'z', "--..".to_ascii_uppercase());
+        verify_smorse_char(&map, 'c', "-.-.".to_string());
+        verify_smorse_char(&map, 'd', "-..".to_string());
+        verify_smorse_char(&map, 'e', ".".to_string());
+        verify_smorse_char(&map, 'f', "..-.".to_string());
+        verify_smorse_char(&map, 'g', "--.".to_string());
+        verify_smorse_char(&map, 'h', "....".to_string());
+        verify_smorse_char(&map, 'i', "..".to_string());
+        verify_smorse_char(&map, 'j', ".---".to_string());
+        verify_smorse_char(&map, 'k', "-.-".to_string());
+        verify_smorse_char(&map, 'l', ".-..".to_string());
+        verify_smorse_char(&map, 'm', "--".to_string());
+        verify_smorse_char(&map, 'n', "-.".to_string());
+        verify_smorse_char(&map, 'o', "---".to_string());
+        verify_smorse_char(&map, 'p', ".--.".to_string());
+        verify_smorse_char(&map, 'q', "--.-".to_string());
+        verify_smorse_char(&map, 'r', ".-.".to_string());
+        verify_smorse_char(&map, 's', "...".to_string());
+        verify_smorse_char(&map, 't', "-".to_string());
+        verify_smorse_char(&map, 'u', "..-".to_string());
+        verify_smorse_char(&map, 'v', "...-".to_string());
+        verify_smorse_char(&map, 'w', ".--".to_string());
+        verify_smorse_char(&map, 'x', "-..-".to_string());
+        verify_smorse_char(&map, 'y', "-.--".to_string());
+        verify_smorse_char(&map, 'z', "--..".to_string());
 
 
 
