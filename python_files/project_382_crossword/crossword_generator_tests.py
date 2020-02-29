@@ -50,6 +50,34 @@ class TestCrosswordGenerator(unittest.TestCase):
         ]
         self.assertTrue(cg.validate_crossword(expected_crossword, dim_len))
 
+    def test_invalidates_one_eighty_symmetry(self):
+        dim_len = 9
+        """
+            # . . . . . . . #      
+            # . . . . . . . #      
+            # . . . . . . . #      
+            . . . # # # . . .      
+            . . . # # # . . .      
+            . . . # # # . . .      
+            . . . . . . . . .      
+            # . . . . . . . #      
+            # # . . . . . # #   
+        """
+        invalid_cross = [
+            [False, True, True, True, True, True, True, True, False],
+            [False, True, True, True, True, True, True, True, False],
+            [False, True, True, True, True, True, True, True, False],
+            [True, True, True, False, False, False, True, True, True],
+            [True, True, True, False, False, False, True, True, True],
+            [True, True, True, False, False, False, True, True, True],
+            [True, True, True, True, True, True, True, True, True],
+            [False, True, True, True, True, True, True, True, False],
+            [False, False, True, True, True, True, True, False, False],
+        ]
+
+        self.assertTrue(cg.validate_cross_len(invalid_cross, dim_len))
+        self.assertFalse(cg.validate_crossword(invalid_cross, dim_len))
+
 
 if __name__ == '__main__':
     unittest.main()
