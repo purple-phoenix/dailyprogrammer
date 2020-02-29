@@ -78,6 +78,34 @@ class TestCrosswordGenerator(unittest.TestCase):
         self.assertTrue(cg.validate_cross_len(invalid_cross, dim_len))
         self.assertFalse(cg.validate_crossword(invalid_cross, dim_len))
 
+    def test_invalidates_disconnection(self):
+        dim_len = 9
+        """
+            # # . . . . # # #      
+            # . . . . . # # #      
+            . . . . . . # # #      
+            . . . . . # . . .      
+            . . . . # . . . .      
+            . . . # . . . . .      
+            # # # . . . . . .      
+            # # # . . . . . #      
+            # # # . . . . # #  
+        """
+        invalid_cross = [
+            [False, False, True, True, True, True, False, False, False],
+            [False, True, True, True, True, True, False, False, False],
+            [True, True, True, True, True, True, False, False, False],
+            [True, True, True, True, True, False, True, True, True],
+            [True, True, True, True, False, True, True, True, True],
+            [True, True, True, False, True, True, True, True, True],
+            [False, False, False, True, True, True, True, True, True],
+            [False, False, False, True, True, True, True, True, False],
+            [False, False, False, True, True, True, True, False, False],
+        ]
+        self.assertTrue(cg.validate_cross_len(invalid_cross, dim_len))
+        self.assertTrue(cg.validate_cross_one_eighty_symmetry(invalid_cross, dim_len))
+        self.assertFalse(cg.validate_crossword(invalid_cross, dim_len))
+
 
 if __name__ == '__main__':
     unittest.main()
