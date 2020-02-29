@@ -76,6 +76,7 @@ class TestCrosswordGenerator(unittest.TestCase):
         ]
 
         self.assertTrue(cg.validate_cross_len(invalid_cross, dim_len))
+        self.assertTrue(cg.validate_white_connection(invalid_cross))
         self.assertFalse(cg.validate_crossword(invalid_cross, dim_len))
 
     def test_invalidates_disconnection(self):
